@@ -42,6 +42,7 @@ export class LsCommonTest {
     // Redirect to a tab
     public async redirectToTab(tabName: string) {
         await this.page.getByRole("tab", { name: tabName }).click();
+        await this.page.waitForTimeout(5000);
     };
 
     public async selectItem(itemName: string) {

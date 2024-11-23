@@ -33,7 +33,7 @@ export const LESSON_NAME = {
     newEndTime: "12:00 pm",
     newClassroom: `CR02 - ${centerName}`,
     teacher: "[E2E][Lesson] Kim Ngan SPU",
-    student: "[E2E][Lesson] Kim Ngan Student",  //add student manually
+    // student: "[E2E][Lesson] Kim Ngan Student",  //add student manually
     numberLA: "539",
 
 }

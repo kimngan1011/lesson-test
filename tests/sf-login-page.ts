@@ -29,7 +29,8 @@ export async function loginBO(page: Page, accessType: 'full' | 'partial') {
     }
 
     // Navigate to "Lesson Management"
-    await page.getByText('Lesson').click({ timeout: 5000 });
+    await page.waitForTimeout (10000);
+    await page.getByText('Lesson').click();
     await page.getByLabel('Lesson Management').click();
 
     // Clear all filters

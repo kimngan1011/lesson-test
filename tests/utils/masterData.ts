@@ -1,6 +1,6 @@
 const brandName = "[E2E] Brand A";
 const centerName = `${brandName} - Center 1`;
-const courseMasterName = "CM Ngan Schedule";
+const courseMasterName = "[E2E] CM Ngan Schedule 112201";
 const locationCourseName = `${courseMasterName} - ${centerName}`;
 
 

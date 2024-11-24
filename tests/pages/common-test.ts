@@ -30,6 +30,13 @@ export class LsCommonTest {
         await this.page.getByRole("link", { name: value }).click();
     };
 
+    public async searchRecurringLesson(value) {
+        await this.page.getByPlaceholder('Search this list...').click({ timeout: 5000 });
+        await this.page.getByPlaceholder('Search this list...').fill(value);
+        await this.page.getByPlaceholder('Search this list...').press('Enter');
+        await this.page.getByRole("link", { name: value }).nth(4).click();
+    }
+
     // Search data in a popup
 
     public async searchData(name: string, value: string) {

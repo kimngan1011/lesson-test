@@ -28,6 +28,6 @@ export class BOLesson {
     public async openLessonDetail () {
         const boLesson = new BOLesson (this.page);
         const lessonDateLink = await boLesson.getLessonDateLink();
-        await this.page.getByRole("link", { name: lessonDateLink }).click();
+        await this.page.getByRole("link", { name: lessonDateLink }).nth(0).click();
     }
 }

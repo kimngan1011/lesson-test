@@ -23,6 +23,14 @@ export class LsPopup {
         await this.page.getByLabel(fieldName, { exact: true }).fill(endDate);
     };
 
+    public async getNextLessonDate(fieldName: string) {
+        const currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + 1);
+        const formatOptions = { day: 'numeric', month: 'short', year: 'numeric' } as any;
+        const nextLessonDate = currentDate.toLocaleDateString('en-GB', formatOptions);
+        await this.page.getByLabel(fieldName).click();
+        await this.page.getByLabel(fieldName).fill(nextLessonDate);
+    };
     public async inputData(fieldName: string, value: string) {
         await this.page.getByLabel(fieldName).click();
         await this.page.getByLabel(fieldName).fill(value);

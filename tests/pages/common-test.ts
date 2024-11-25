@@ -7,7 +7,7 @@ export class LsCommonTest {
 
     // Navigate to page
     public async navigateToPage(url) {
-        await this.page.goto(url);
+        await this.page.goto(url, { timeout: 10000 });
     };
 
     // Click on button

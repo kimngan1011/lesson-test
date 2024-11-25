@@ -4,7 +4,6 @@ import { LsCommonTest } from "./common-test";
 import { LsPopup } from "./lesson-popup";
 import { MASTER_NAME, LESSON_NAME } from "../utils/masterData";
 import { LESSON_URL } from "../utils/url";
-import { CreateLessonAllocation } from "./create-lesson-allocation";
 export class CreateLesson {
     readonly page: Page;
     page1: Page;
@@ -15,7 +14,7 @@ export class CreateLesson {
 
     public async createLesson(
         lessonType: 'oneTimeIndividual' | 'oneTimeGroup' | 'recurringGroup' | 'recurringIndividual',
-        timeout: number = 5000
+        timeout: number = 10000
     ): Promise<string> {
         const lsCommonTest = new LsCommonTest(this.page);
         const lessonDialog = new LsPopup(this.page);
@@ -138,6 +137,6 @@ export class CreateLesson {
         await this.page.keyboard.press('PageDown');
         await this.page.locator('a[href*="/lightning/r/MANAERP__Lesson_Schedule__c/"]').click();
         await this.page.getByRole('grid').getByText(value).nth(0).click();
-
+        await this.page.waitForTimeout(7000);
     }
 }    

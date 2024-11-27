@@ -53,7 +53,7 @@ export class CreateLessonAllocation {
         return fullName;
     };
 
-    public async checkLADurationAndPS(info: string) {
+    public async checkLADurationAndPS(info: string, action: 'Submit' | 'Cancel') {
         const boLesson = new BOLesson(this.page);
         const lAStartDate = await boLesson.getLessonDateLink('lAStartDate');
         const lAEndDate = await boLesson.getNextLessonDateLink('lAEndDate');
@@ -62,9 +62,17 @@ export class CreateLessonAllocation {
         await this.page.locator('a[href*="/lightning/r/Lesson_Allocation__c/"]').click();
         await this.page.waitForTimeout(5000);
         const page1 = await page1Promise;
-        await page1.getByText(`Duration${lAStartDate} - ${lAEndDate}`).click();
+        if (action === 'Submit') {
+            await page1.getByText(`Duration${lAStartDate} - ${lAEndDate}`).click();
+        }else if (action === 'Cancel') {
+            await page1.getByText(`Duration${lAStartDate} - 2026-03-31`).click();
+        }
         await page1.getByText(info).click(); // Purchased Slot5/Week
         page1.close();
+    }
+
+    public async checkLAInfo(info: string) {
+        await this.page.getByRole('heading', { name: info }).click(); // 'Lesson Allocation (0)'
     }
 
     public get getWithdrawalApplicationRecord() {
@@ -92,7 +100,7 @@ export class CreateLessonAllocation {
 
     };
 
-    public async withdrawalOrder () {
+    public async withdrawalOrder (action: 'UpdateLA' | 'DeleteLA') {
         const lsCommonTest = new LsCommonTest(this.page);
         const lessonDialog = new LsPopup(this.page);
         const accessWithdrawalOrder = new CreateLessonAllocation(this.page);
@@ -102,15 +110,19 @@ export class CreateLessonAllocation {
         await this.page.locator('label').filter({ hasText: 'Withdrawal' }).locator('span').first().click();
         await lsCommonTest.clickOnExactButton('Next');
         await accessWithdrawalOrder.searchAndSelectLocation('Search Accounts', MASTER_NAME.centerName);
-        await lessonDialog.getNextLessonDate('*Last Attendance Day');
+        if (action === 'UpdateLA') {
+            await lessonDialog.getNextLessonDate('*Last Attendance Day');
+        } else if (action === 'DeleteLA') {
+            await lessonDialog.getLessonDate('*Last Attendance Day');
+        }
         await this.page.getByRole('option', { name: 'Graduate' }).click();
         await this.page.getByRole('button', { name: 'Move to Chosen' }).click();
         await lsCommonTest.clickOnExactButton('Save');
         await accessWithdrawalOrder.accessWithdrawalOrder();
         await this.page.waitForTimeout(5000);
-        const url=await this.page.url();
+        const withdrawalUrl=await this.page.url();
         await lsCommonTest.clickOnExactButton('Create Withdrawal');
-        await this.page.getByTitle('Default Start Date', { exact: true }).click();
+        await this.page.locator('lightning-formatted-text').filter({ hasText: 'Withdrawal' }).click();
         await lsCommonTest.scrollPage();
         await lsCommonTest.clickOnExactButton('Manage');
         await lsCommonTest.clickOnExactButton('Add Withdrawal Products');
@@ -118,9 +130,18 @@ export class CreateLessonAllocation {
         await this.page.waitForTimeout(5000);
         await lsCommonTest.clickOnExactButton('Save as Draft');
         await this.page.waitForTimeout(5000);
-        await this.page.goto(url);
+        await this.page.goto(withdrawalUrl);
         await this.page.getByRole('button', { name: 'Submit Withdrawal' }).click();
         await this.page.getByRole('button', { name: 'Close this window' }).click();
         await this.page.waitForTimeout(40000); // wait to sync data 
+
+        return withdrawalUrl;
+    }
+
+    public async cancelWithdrawal() {
+        const lsCommonTest = new LsCommonTest(this.page);
+
+        await lsCommonTest.clickOnExactButton('Cancel Withdrawal');
+        await this.page.waitForTimeout(40000);
     }
 }

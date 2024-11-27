@@ -28,7 +28,7 @@ export class LsPopup {
         currentDate.setDate(currentDate.getDate() + 1);
         const formatOptions = { day: 'numeric', month: 'short', year: 'numeric' } as any;
         const nextLessonDate = currentDate.toLocaleDateString('en-GB', formatOptions);
-        await this.page.getByLabel(fieldName).click();
+        await this.page.getByLabel(fieldName, {exact:true}).click();
         await this.page.getByLabel(fieldName).fill(nextLessonDate);
     };
     public async inputData(fieldName: string, value: string) {

@@ -14,19 +14,23 @@ export class BOLesson {
         
     }; 
 
-    public async getLessonDateLink () {
+    public async getLessonDateLink (format: 'lessonDate' | 'lAStartDate') {
         const date = new Date();
 
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
 
-        const lessonDateLink = `${year}/${month}/${day}`;
-
-        return lessonDateLink;
+        if (format === 'lessonDate') {
+            const lessonDateLink = `${year}/${month}/${day}`;
+            return lessonDateLink;
+        }else if (format === 'lAStartDate') {
+            const lAStartDate = `${year}-${month}-${day}`;
+            return lAStartDate;
+        }
     }
 
-    public async getNextLessonDateLink () {
+    public async getNextLessonDateLink (format: 'nextLessonDate' | 'lAEndDate') {
         const date = new Date();
         date.setDate(date.getDate() + 1);
 
@@ -34,16 +38,20 @@ export class BOLesson {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
 
-        const lessonDateLink = `${year}/${month}/${day}`;
-
-        return lessonDateLink;
+        if (format === 'nextLessonDate') {
+            const nextLessonDateLink = `${year}/${month}/${day}`;
+            return nextLessonDateLink;
+        }else if (format === 'lAEndDate') {
+            const lAEndDate = `${year}-${month}-${day}`;
+            return lAEndDate;
+        }
     }
 
     public async openLessonDetail(isNext: boolean = false) {
         const boLesson = new BOLesson(this.page);
         const lessonDateLink = isNext 
-            ? await boLesson.getNextLessonDateLink() 
-            : await boLesson.getLessonDateLink();
+            ? await boLesson.getNextLessonDateLink('nextLessonDate') 
+            : await boLesson.getLessonDateLink('lessonDate');
         await this.page.getByRole("link", { name: lessonDateLink }).nth(0).click();
         await this.page.waitForTimeout(5000);
     }

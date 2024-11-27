@@ -4,6 +4,7 @@ import { MASTER_URL } from "../utils/url";
 import { LsPopup, StudentPopup } from "./lesson-popup";
 import { randomText } from "../utils/random";
 import { MASTER_NAME } from "../utils/masterData";
+import { BOLesson } from "./bo-lesson";
 
 export class CreateLessonAllocation {
     page: Page;
@@ -33,9 +34,8 @@ export class CreateLessonAllocation {
         await lsCommonTest.clickOnExactButton("Save");
         await this.page.waitForTimeout(5000);
         const url=await this.page.url();
-        console.log(url);
         await lsCommonTest.clickOnExactButton("Create Enrollment");
-        await this.page.keyboard.press('PageDown');
+        await lsCommonTest.scrollPage();
         await lsCommonTest.clickOnExactButton("Manage");
         await lsCommonTest.clickOnExactButton("Add Products");
         await lsCommonTest.selectItem("Select Item 1");
@@ -46,8 +46,81 @@ export class CreateLessonAllocation {
         await this.page.waitForTimeout(5000);
         await this.page.goto(url);
         await this.page.getByRole('button', { name: 'Submit Enrollment' }).click();
-        await this.page.waitForTimeout(30000); // wait to sync data
+        await this.page.waitForTimeout(40000); // wait to sync data 
+        await lsCommonTest.openHyperlink(fullName);
+        await lsCommonTest.redirectToTab('Course');
 
         return fullName;
     };
+
+    public async checkLADurationAndPS(info: string) {
+        const boLesson = new BOLesson(this.page);
+        const lAStartDate = await boLesson.getLessonDateLink('lAStartDate');
+        const lAEndDate = await boLesson.getNextLessonDateLink('lAEndDate');
+        const page1Promise = this.page.waitForEvent('popup');
+
+        await this.page.locator('a[href*="/lightning/r/Lesson_Allocation__c/"]').click();
+        await this.page.waitForTimeout(5000);
+        const page1 = await page1Promise;
+        await page1.getByText(`Duration${lAStartDate} - ${lAEndDate}`).click();
+        await page1.getByText(info).click(); // Purchased Slot5/Week
+        page1.close();
+    }
+
+    public get getWithdrawalApplicationRecord() {
+        const withdrawalApplicationRecord = this.page.locator('[aria-label="Withdrawals"] [data-label="Application Number"] [data-label="Application Number"]');
+       
+        return withdrawalApplicationRecord;
+    } 
+
+    public async accessWithdrawalOrder() {
+
+        const applicationNumber = this.getWithdrawalApplicationRecord;
+        // get application number and extract to find link and click
+        const StringApplicationNumber = await applicationNumber.innerText()
+        const startIndex = StringApplicationNumber.indexOf('Application-')
+        const endIndex = StringApplicationNumber.indexOf('\n' + 'Open')
+        const StringApplicationNumber_Extract = StringApplicationNumber.slice(startIndex,endIndex)
+        console.log(StringApplicationNumber_Extract)
+        await this.page.getByRole('rowheader', { name: StringApplicationNumber_Extract + ' Open' }).getByRole('link').click()
+    }
+
+    public async searchAndSelectLocation(fieldName: string, optionName: string) {
+        await this.page.getByPlaceholder(fieldName).click();
+        await this.page.getByPlaceholder(fieldName).fill(optionName);
+        await this.page.getByTitle(optionName, { exact: true }).nth(1).click();
+
+    };
+
+    public async withdrawalOrder () {
+        const lsCommonTest = new LsCommonTest(this.page);
+        const lessonDialog = new LsPopup(this.page);
+        const accessWithdrawalOrder = new CreateLessonAllocation(this.page);
+
+        await lsCommonTest.showMoreAndClickItem('Application');
+        await this.page.getByLabel('Withdrawals').getByRole('button', { name: 'New' }).click();
+        await this.page.locator('label').filter({ hasText: 'Withdrawal' }).locator('span').first().click();
+        await lsCommonTest.clickOnExactButton('Next');
+        await accessWithdrawalOrder.searchAndSelectLocation('Search Accounts', MASTER_NAME.centerName);
+        await lessonDialog.getNextLessonDate('*Last Attendance Day');
+        await this.page.getByRole('option', { name: 'Graduate' }).click();
+        await this.page.getByRole('button', { name: 'Move to Chosen' }).click();
+        await lsCommonTest.clickOnExactButton('Save');
+        await accessWithdrawalOrder.accessWithdrawalOrder();
+        await this.page.waitForTimeout(5000);
+        const url=await this.page.url();
+        await lsCommonTest.clickOnExactButton('Create Withdrawal');
+        await this.page.getByTitle('Default Start Date', { exact: true }).click();
+        await lsCommonTest.scrollPage();
+        await lsCommonTest.clickOnExactButton('Manage');
+        await lsCommonTest.clickOnExactButton('Add Withdrawal Products');
+        await lsCommonTest.clickOnExactButton('Continue');
+        await this.page.waitForTimeout(5000);
+        await lsCommonTest.clickOnExactButton('Save as Draft');
+        await this.page.waitForTimeout(5000);
+        await this.page.goto(url);
+        await this.page.getByRole('button', { name: 'Submit Withdrawal' }).click();
+        await this.page.getByRole('button', { name: 'Close this window' }).click();
+        await this.page.waitForTimeout(40000); // wait to sync data 
+    }
 }

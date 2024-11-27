@@ -63,4 +63,18 @@ export class LsCommonTest {
         await this.page.getByTitle(optionName, { exact: true }).click();
 
     };
+
+    public async openHyperlink (value: string) {
+        await this.page.getByRole('link', { name: value }).click();
+    }
+
+    public async showMoreAndClickItem (value: string) {
+        await this.page.getByRole('button', { name: 'More Tabs' }).click();
+        await this.page.getByRole('menuitem', { name: value }).click();
+    }
+
+    public async scrollPage () {
+        await this.page.keyboard.press('PageDown');
+    }
+
 }    

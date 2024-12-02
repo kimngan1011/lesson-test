@@ -22,16 +22,18 @@ export class LsCommonTest {
         await this.page.getByRole("button", { name: btnName, exact: true }).click();
     };        
 
-    // Search a list
+    // Search a list and open detail
     public async searchList(value) {
-        await this.page.getByPlaceholder('Search this list...').click({ timeout: 5000 });
+        await this.page.waitForTimeout(7000);
+        await this.page.getByPlaceholder('Search this list...').click();
         await this.page.getByPlaceholder('Search this list...').fill(value);
         await this.page.getByPlaceholder('Search this list...').press('Enter');
         await this.page.getByRole("link", { name: value }).click();
     };
 
     public async searchRecurringLesson(value) {
-        await this.page.getByPlaceholder('Search this list...').click({ timeout: 5000 });
+        await this.page.waitForTimeout(7000);
+        await this.page.getByPlaceholder('Search this list...').click();
         await this.page.getByPlaceholder('Search this list...').fill(value);
         await this.page.getByPlaceholder('Search this list...').press('Enter');
         await this.page.getByRole("link", { name: value }).nth(4).click();
@@ -52,11 +54,13 @@ export class LsCommonTest {
         await this.page.waitForTimeout(5000);
     };
 
+    // Select item student and teacher
     public async selectItem(itemName: string) {
           await this.page.getByRole('gridcell', { name: itemName }).locator('span').nth(1).click();
 
     };
 
+    // Search and select data in lesson upsert
     public async searchAndSelectDataStandard(fieldName: string, optionName: string) {
         await this.page.getByPlaceholder(fieldName).click();
         await this.page.getByPlaceholder(fieldName).fill(optionName);
@@ -64,17 +68,28 @@ export class LsCommonTest {
 
     };
 
+    // Open hyperlink
     public async openHyperlink (value: string) {
         await this.page.getByRole('link', { name: value }).click();
     }
 
+    // Show more and click menu
     public async showMoreAndClickItem (value: string) {
         await this.page.getByRole('button', { name: 'More Tabs' }).click();
         await this.page.getByRole('menuitem', { name: value }).click();
     }
 
+    // Scroll page
     public async scrollPage () {
         await this.page.keyboard.press('PageDown');
     }
+
+    // Open LC detail
+    public async openLCDetail () {
+        await this.page.keyboard.press('PageDown');
+        await this.page.locator('a[href*="/lightning/r/MANAERP__Lesson_Schedule__c/"]').click();
+        await this.page.waitForTimeout(5000);
+    }
+
 
 }    

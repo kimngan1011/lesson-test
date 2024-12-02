@@ -46,7 +46,7 @@ export class CreateLessonAllocation {
         await this.page.waitForTimeout(5000);
         await this.page.goto(url);
         await this.page.getByRole('button', { name: 'Submit Enrollment' }).click();
-        await this.page.waitForTimeout(40000); // wait to sync data 
+        await this.page.waitForTimeout(60000); // wait to sync data 
         await lsCommonTest.openHyperlink(fullName);
         await lsCommonTest.redirectToTab('Course');
 

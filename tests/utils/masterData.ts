@@ -32,8 +32,6 @@ export const LESSON_NAME = {
     endTime: "10:00 am",
     newEndTime: "12:00 pm",
     newClassroom: `CR02 - ${centerName}`,
-    teacher: "[E2E][Lesson] Kim Ngan SPU",
-    // student: "[E2E][Lesson] Kim Ngan Student",  //add student manually
-    numberLA: "539",
-
+    teacherRecurring: "[E2E][Lesson] Kim Ngan SPU",
+    teacherOneTime: '[E2E] Kim Ngan Teacher',
 }

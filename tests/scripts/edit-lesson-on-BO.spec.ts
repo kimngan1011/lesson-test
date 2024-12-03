@@ -9,43 +9,53 @@ import { CreateLesson } from "../pages/create-lesson";
 import { LESSON_NAME } from "../utils/masterData";
 
 
-// test('Edit one time individual lesson on BO', async ({ page }) => {
-//     const boLesson = new BOLesson(page);
-//     const showMessage = new MessageLesson(page);
-//     const lsCommonTest = new LsCommonTest(page);
-//     const lessonName = randomText(10);
-//     const checkLCInfo = new CreateLesson(page);
+test('Edit one time individual lesson on BO', async ({ page }) => {
+    const boLesson = new BOLesson(page);
+    const showMessage = new MessageLesson(page);
+    const lsCommonTest = new LsCommonTest(page);
+    const lessonName = randomText(10);
+    const checkLCInfo = new CreateLesson(page);
 
-//     await loginBO(page, 'partial');
-//     await boLesson.filterTeacher('oneTimeIndividual');
-//     await boLesson.openLessonDetail();
-//     await boLesson.editLesson(lessonName,'oneTimeIndividual');
-//     await showMessage.editLessonBO();
-//     await boLesson.checkLessonInfo(lessonName,'oneTimeIndividual')
-//     await lsCommonTest.navigateToPage(LESSON_URL.lesson);
-//     await lsCommonTest.searchList(lessonName);
-//     await checkLCInfo.checkLessonScheduleInfo(LESSON_NAME.teacherOneTime);
-// })
+    await loginBO(page, 'partial');
+    await boLesson.filterTeacher('oneTimeIndividual');
+    await boLesson.publishLessonOnBO();
+    await boLesson.openLessonDetail();
+    await boLesson.editLesson(lessonName,'oneTimeIndividual');
+    await showMessage.editLessonBO();
+    await boLesson.checkLessonInfo(lessonName,'oneTimeIndividual')
+    await boLesson.collectAttendanceOnBO('attend');
+    await showMessage.collectAttendaneBO();
+    await page.waitForTimeout(15000);
+    await lsCommonTest.navigateToPage(LESSON_URL.lesson);
+    await lsCommonTest.searchList(lessonName);
+    await boLesson.checkAttendAndLate('Attend');
+    await checkLCInfo.checkLessonScheduleInfo('Published');
+})
 
-// test('Edit recurring group lesson with only this lesson on BO', async ({ page }) => {
-//     const boLesson = new BOLesson(page);
-//     const showMessage = new MessageLesson(page);
-//     const lsCommonTest = new LsCommonTest(page);
-//     const lessonName = randomText(10);
-//     const checkLCInfo = new CreateLesson(page);
+test('Edit recurring individual lesson with this and the following on BO', async ({ page }) => {
+    const boLesson = new BOLesson(page);
+    const showMessage = new MessageLesson(page);
+    const lsCommonTest = new LsCommonTest(page);
+    const lessonName = randomText(10);
+    const checkLCInfo = new CreateLesson(page);
 
-//     await loginBO(page, 'partial');
-//     await boLesson.filterTeacher('recurringGroup');
-//     await boLesson.openLessonDetail();
-//     await boLesson.editLesson(lessonName,'recurringGroup', 'only');
-//     await showMessage.editLessonBO();
-//     await boLesson.checkLessonInfo(lessonName,'recurringGroup');
-//     await lsCommonTest.navigateToPage(LESSON_URL.lesson);
-//     await lsCommonTest.searchList(lessonName);
-//     await checkLCInfo.checkLessonScheduleInfo(LESSON_NAME.teacherRecurring);
-// })
+    await loginBO(page, 'partial');
+    await boLesson.filterTeacher('recurringGroup');
+    await boLesson.publishLessonOnBO();
+    await boLesson.openLessonDetail();
+    await boLesson.editLesson(lessonName,'recurringGroup', 'following');
+    await showMessage.editLessonBO();
+    await boLesson.checkLessonInfo(lessonName,'recurringIndividual');
+    await boLesson.collectAttendanceOnBO('late');
+    await showMessage.collectAttendaneBO();
+    await page.waitForTimeout(15000);
+    await lsCommonTest.navigateToPage(LESSON_URL.lesson);
+    await lsCommonTest.searchRecurringLesson(lessonName);
+    await boLesson.checkAttendAndLate('Late');
+    await checkLCInfo.checkLessonScheduleInfo('Published');
+})
 
-test('Edit recurring group lesson with this and the following on BO', async ({ page }) => {
+test('Edit recurring group lesson with only this lesson on BO', async ({ page }) => {
     const boLesson = new BOLesson(page);
     const showMessage = new MessageLesson(page);
     const lsCommonTest = new LsCommonTest(page);
@@ -55,11 +65,37 @@ test('Edit recurring group lesson with this and the following on BO', async ({ p
     await loginBO(page, 'partial');
     await boLesson.filterTeacher('recurringGroup');
     await boLesson.openLessonDetail();
-    await boLesson.editLesson(lessonName,'recurringGroup', 'following');
+    await boLesson.editLesson(lessonName,'recurringGroup', 'only');
     await showMessage.editLessonBO();
     await boLesson.checkLessonInfo(lessonName,'recurringGroup');
+    await boLesson.collectAttendanceOnBO('absent');
+    await showMessage.collectAttendaneBO();
     await page.waitForTimeout(15000);
     await lsCommonTest.navigateToPage(LESSON_URL.lesson);
-    await lsCommonTest.searchRecurringLesson(lessonName);
-    await checkLCInfo.checkLessonScheduleInfo(LESSON_NAME.teacherRecurring);
+    await lsCommonTest.searchList(lessonName);
+    await boLesson.checkAbsent('Absent', 'Family Reasons', 'On The Day');
+    await checkLCInfo.checkLessonScheduleInfo('Published');
+})
+
+test('Edit one time group lesson on BO', async ({ page }) => {
+    const boLesson = new BOLesson(page);
+    const showMessage = new MessageLesson(page);
+    const lsCommonTest = new LsCommonTest(page);
+    const lessonName = randomText(10);
+    const checkLCInfo = new CreateLesson(page);
+
+    await loginBO(page, 'partial');
+    await page.pause();
+    await boLesson.filterTeacher('oneTimeIndividual');
+    await boLesson.openLessonDetail();
+    await boLesson.editLesson(lessonName,'oneTimeIndividual');
+    await showMessage.editLessonBO();
+    await boLesson.checkLessonInfo(lessonName,'oneTimeIndividual')
+    await boLesson.collectAttendanceOnBO('allAttend');
+    await showMessage.collectAttendaneBO();
+    await page.waitForTimeout(15000);
+    await lsCommonTest.navigateToPage(LESSON_URL.lesson);
+    await lsCommonTest.searchList(lessonName);
+    await boLesson.checkAttendAndLate('Attend');
+    await checkLCInfo.checkLessonScheduleInfo('Published');
 })

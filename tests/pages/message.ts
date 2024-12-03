@@ -5,8 +5,13 @@ export class MessageLesson {
         this.page = page;
     }
 
-    // Show success message when editing lesson on BO
+    // Edit and publish lesson on BO
     public async editLessonBO () {
         await this.page.getByText('You have updated the lesson successfully').click();
+    }
+
+    // Collect attendance on BO
+    public async collectAttendaneBO () {
+        await this.page.getByText('You have collected the attendance successfully').click();
     }
 }    

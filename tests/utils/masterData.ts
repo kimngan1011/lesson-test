@@ -34,4 +34,5 @@ export const LESSON_NAME = {
     newClassroom: `CR02 - ${centerName}`,
     teacherRecurring: "[E2E][Lesson] Kim Ngan SPU",
     teacherOneTime: '[E2E] Kim Ngan Teacher',
+    teacherAdded: '[E2E] Kim Ngan CM',
 }

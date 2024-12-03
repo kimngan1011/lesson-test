@@ -22,14 +22,16 @@ export class BOLesson {
     // Filter teacher on BP
     public async filterTeacher(lessonType: 'oneTimeIndividual' | 'recurringGroup') {
         await this.page.getByTestId('MButtonDropdownWithPopover__button').click();
+        // await this.page.getByTestId('FilterLessonList__lessonStatuses').getByLabel('Open').click();
+        // await this.page.getByRole('option', { name: 'Draft' }).click();
         await this.page.locator('div').filter({ hasText: /^Teacher Name$/ }).click();
 
         if (lessonType === 'oneTimeIndividual') {
-            await this.page.getByTestId('FilterLessonList__teachers').getByLabel('Teacher Name').fill('Teacher [E2E] Kim Ngan');
-            await this.page.getByTestId('MTooltipBase').getByText('Teacher [E2E] Kim Ngan').click();
+            await this.page.getByTestId('FilterLessonList__teachers').getByLabel('Teacher Name').fill(LESSON_NAME.teacherOneTime);
+            await this.page.getByTestId('MTooltipBase').getByText(LESSON_NAME.teacherOneTime).click();
         }else if (lessonType === 'recurringGroup') {
-            await this.page.getByTestId('FilterLessonList__teachers').getByLabel('Teacher Name').fill('SPU [E2E][Lesson] Kim Ngan');
-            await this.page.getByTestId('MTooltipBase').getByText('SPU [E2E][Lesson] Kim Ngan').click();
+            await this.page.getByTestId('FilterLessonList__teachers').getByLabel('Teacher Name').fill(LESSON_NAME.teacherRecurring);
+            await this.page.getByTestId('MTooltipBase').getByText(LESSON_NAME.teacherRecurring).click();
         }
 
         await this.page.getByTestId('MButtonDropdownWithPopover__buttonApply').click(); 
@@ -74,7 +76,7 @@ export class BOLesson {
     // Get end date
     public async getEndDate () {
         const date = new Date();
-        date.setDate(date.getDate() + 28);
+        date.setDate(date.getDate() + 30);
 
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -122,8 +124,8 @@ export class BOLesson {
         await this.page.getByTestId('SectionLessonNameSF__textField').getByTestId('MTextFieldHF__input').fill(lessonName);
         // PT Teacher cannot edit teacher
         // await this.page.getByLabel('Teacher *').click();
-        // await this.page.getByTestId('SectionTeacherSF__autocomplete').getByLabel('Teacher *').fill('[E2E] Kim Ngan CM');
-        // await this.page.getByRole('option', { name: '[E2E] Kim Ngan CM' }).click();
+        // await this.page.getByTestId('SectionTeacherSF__autocomplete').getByLabel('Teacher *').fill(LESSON_NAME.teacherAdded);
+        // await this.page.getByRole('option', { name: LESSON_NAME.teacherAdded }).click();
         await this.page.getByLabel('Classroom').click();
         await this.page.getByTestId('SectionClassroom__autocomplete').getByLabel('Classroom').fill(LESSON_NAME.newClassroom);
         await this.page.getByTestId('MTooltipBase').getByText(LESSON_NAME.newClassroom).click();
@@ -147,13 +149,13 @@ export class BOLesson {
         } 
     }
     // Check lesson info on BO
-    public async checkLessonInfo (lessonName: string, lessonType: 'oneTimeIndividual' | 'recurringGroup') {
+    public async checkLessonInfo (lessonName: string, lessonType: 'oneTimeIndividual' | 'oneTimeGroup' | 'recurringIndividual' | 'recurringGroup') {
         const boLesson = new BOLesson(this.page);
         const lessonDate = await boLesson.getNextLessonDateLink('nextLessonDate');
         const endDate = await boLesson.getEndDate();
         const lsCommonTest = new LsCommonTest(this.page);
 
-        await this.page.getByText(`Draft${lessonDate}`).click();
+        await this.page.getByText(`Published${lessonDate}`).click();
         await this.page.getByText(`Lesson Date${lessonDate}`).click();
         await this.page.getByText('Start Time13:00').click();
         await this.page.getByText('End Time14:00').click();
@@ -165,15 +167,98 @@ export class BOLesson {
         await this.page.getByText('Lesson Capacity20').click();
         await this.page.getByText('Cancellation ReasonActs of nature').click();
         await lsCommonTest.scrollPage();
-        if (lessonType === 'oneTimeIndividual'){
-            await this.page.getByText('Teaching MethodIndividual').click();
-            await this.page.getByText('Saving OptionOne Time').click();
-        }else if (lessonType === 'recurringGroup'){
-            await this.page.getByText('Teaching MethodGroup').click();
-            // await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click(); // bug
-            await this.page.getByText(`Class${MASTER_NAME.className}`).click();
-            await this.page.getByText('Saving OptionWeekly Recurring').click();
-            await this.page.getByText(`End Date${endDate}`).click();
+        switch (lessonType) {
+            case 'oneTimeIndividual':
+                // await this.page.getByText('Teaching MethodIndividual').click();
+                await this.page.getByText('Saving OptionOne Time').click();
+                break;
+        
+            case 'oneTimeGroup':
+                // await this.page.getByText('Teaching MethodGroup').click();
+                // await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click(); // bug
+                await this.page.getByText(`Class${MASTER_NAME.className}`).click();
+                await this.page.getByText('Saving OptionOne Time').click();
+                break;
+        
+            case 'recurringIndividual':
+                // await this.page.getByText('Teaching MethodIndividual').click();
+                await this.page.getByText('Saving OptionWeekly Recurring').click();
+                await this.page.getByText(`End Date${endDate}`).click();
+                break;
+        
+            case 'recurringGroup':
+                // await this.page.getByText('Teaching MethodGroup').click();
+                // await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click(); // bug
+                // await this.page.getByText(`Class${MASTER_NAME.className}`).click();
+                // await this.page.getByText('Saving OptionWeekly Recurring').click();
+                await this.page.getByText(`End Date${endDate}`).click();
+                break;
+          }
+    }
+
+    // Publish lesson on BO
+    public async publishLessonOnBO () {
+        await this.page.getByLabel('Select all items').check();
+        await this.page.getByTestId('ActionPanel__trigger').click();
+        await this.page.getByLabel('Bulk Publish Lesson').click();
+        await this.page.getByTestId('MFooterDialogConfirm__buttonConfirm').click();
+    }
+
+    // Collect Attendance on BO
+    public async collectAttendanceOnBO (attendanceType: 'attend' | 'absent' | 'late' | 'allAttend') {
+        const lsCommonTest = new LsCommonTest(this.page);
+
+        await lsCommonTest.redirectToTab ('Student');
+        await this.page.getByTestId('ActionPanel__trigger').click();
+        await this.page.getByLabel('Collect Attendance').click();
+        switch (attendanceType) {
+            case 'attend':
+                await this.page.getByTestId('MDialogCustom__content').getByLabel('Attend').check();
+                await this.page.getByRole('button').nth(1).click();
+                await this.page.getByTestId('MTextFieldHF__input').click();
+                await this.page.getByTestId('MTextFieldHF__input').fill('Remark');
+                await this.page.getByRole('button', { name: 'Save' }).click();
+                await this.page.getByRole('button', { name: 'Save' }).click();
+                await this.page.getByRole('cell', { name: 'Attend' }).click();
+                break;
+
+            case 'allAttend':
+                await this.page.getByRole('button', { name: 'Mark All As Attend' }).click();
+                await this.page.getByRole('button', { name: 'Save' }).click();
+                await this.page.getByRole('cell', { name: 'Attend' }).click();
+                break;
+        
+            case 'absent':
+                await this.page.getByLabel('Absent').click();
+                await this.page.getByTestId('MTextFieldHF__input').click();
+                await this.page.getByTestId('MTextFieldHF__input').fill('Remark');
+                await this.page.waitForTimeout(3000);
+                await this.page.getByRole('button', { name: 'Save' }).click();
+                await this.page.getByLabel('Reallocate').check();
+                await this.page.getByRole('button', { name: 'Save' }).click();
+                await this.page.getByTestId('CheckIcon').click();
+                await this.page.getByRole('cell', { name: 'Absent' }).click();
+                break;
+        
+            case 'late':
+                await this.page.getByLabel('Late, Leave Early').click({ force: true });
+                await this.page.getByLabel('Physical Reasons').check();
+                await this.page.getByRole('button', { name: 'Save' }).click();
+                await this.page.getByRole('button', { name: 'Save' }).click();
+                await this.page.getByRole('cell', { name: 'Late, Leave Early' }).click();
+                break;
         }
     }
+
+    // Check attendance info
+    public async checkAttendAndLate (attendanceStatus: string) {
+        await this.page.getByRole('gridcell', { name: attendanceStatus }).locator('span').click();
+    }    
+
+    public async checkAbsent (attendanceStatus: string, attendanceReason: string, attendanceNotice: string) {
+        await this.page.getByRole('gridcell', { name: attendanceStatus }).locator('span').click();
+        await this.page.getByRole('gridcell', { name: attendanceReason }).locator('span').click();
+        await this.page.getByRole('gridcell', { name: attendanceNotice }).locator('span').click();
+        await this.page.getByRole('gridcell', { name: 'True' }).locator('span').first().click();  
+    }    
 }

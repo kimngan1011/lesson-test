@@ -16,7 +16,7 @@ export class LsPopup {
 
     public async getEndDate(fieldName: string) {
         const currentDate = new Date();
-        currentDate.setDate(currentDate.getDate() + 28);
+        currentDate.setDate(currentDate.getDate() + 30);
         const formatOptions = { day: 'numeric', month: 'short', year: 'numeric' } as any;
         const endDate = currentDate.toLocaleDateString('en-GB', formatOptions);
         await this.page.getByLabel(fieldName, { exact: true }).click();

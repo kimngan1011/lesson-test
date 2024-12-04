@@ -20,19 +20,33 @@ export class BOLesson {
     }; 
 
     // Filter teacher on BP
-    public async filterTeacher(lessonType: 'oneTimeIndividual' | 'recurringGroup') {
+    public async filterTeacher(lessonType: 'oneTimeIndividual' | 'oneTimeGroup' | 'recurringIndividual' | 'recurringGroup') {
         await this.page.getByTestId('MButtonDropdownWithPopover__button').click();
         // await this.page.getByTestId('FilterLessonList__lessonStatuses').getByLabel('Open').click();
         // await this.page.getByRole('option', { name: 'Draft' }).click();
         await this.page.locator('div').filter({ hasText: /^Teacher Name$/ }).click();
 
-        if (lessonType === 'oneTimeIndividual') {
-            await this.page.getByTestId('FilterLessonList__teachers').getByLabel('Teacher Name').fill(LESSON_NAME.teacherOneTime);
-            await this.page.getByTestId('MTooltipBase').getByText(LESSON_NAME.teacherOneTime).click();
-        }else if (lessonType === 'recurringGroup') {
-            await this.page.getByTestId('FilterLessonList__teachers').getByLabel('Teacher Name').fill(LESSON_NAME.teacherRecurring);
-            await this.page.getByTestId('MTooltipBase').getByText(LESSON_NAME.teacherRecurring).click();
-        }
+        switch (lessonType){
+            case 'oneTimeIndividual':
+                await this.page.getByTestId('FilterLessonList__teachers').getByLabel('Teacher Name').fill(LESSON_NAME.teacherOneTimeIndividual);
+                await this.page.getByTestId('MTooltipBase').getByText(LESSON_NAME.teacherOneTimeIndividual).click();
+                break;
+
+            case 'oneTimeGroup':
+                await this.page.getByTestId('FilterLessonList__teachers').getByLabel('Teacher Name').fill(LESSON_NAME.teacherOneTimeGroup);
+                await this.page.getByTestId('MTooltipBase').getByText(LESSON_NAME.teacherOneTimeGroup).click();
+                break; 
+
+            case 'recurringIndividual': 
+                await this.page.getByTestId('FilterLessonList__teachers').getByLabel('Teacher Name').fill(LESSON_NAME.teacherRecurringIndividual);
+                await this.page.getByTestId('MTooltipBase').getByText(LESSON_NAME.teacherRecurringIndividual).click();
+                break; 
+                
+            case 'recurringGroup':
+                await this.page.getByTestId('FilterLessonList__teachers').getByLabel('Teacher Name').fill(LESSON_NAME.teacherRecurringGroup);
+                await this.page.getByTestId('MTooltipBase').getByText(LESSON_NAME.teacherRecurringGroup).click();
+                break;    
+            } 
 
         await this.page.getByTestId('MButtonDropdownWithPopover__buttonApply').click(); 
 
@@ -148,8 +162,34 @@ export class BOLesson {
             }
         } 
     }
+
+    // Edit lesson name
+    public async editLessonName(
+        lessonName: string,
+        lessonType: 'oneTimeIndividual' | 'recurringGroup',
+        option?: 'only' | 'following'
+    ): Promise<void> {
+        const lsCommonTest = new LsCommonTest(this.page);
+    
+        await this.page.getByTestId('TabLessonDetailSF__buttonEdit').click();
+        await this.page.getByTestId('SectionLessonNameSF__textField').getByTestId('MTextFieldHF__input').click();
+        await this.page.getByTestId('SectionLessonNameSF__textField').getByTestId('MTextFieldHF__input').fill(lessonName);
+        await lsCommonTest.scrollPage();
+        await this.page.getByTestId('FooterLessonUpsert__buttonSave').click();
+
+        // Handle options for recurring lessons
+        if (lessonType === 'recurringGroup' && option) {
+            if (option === 'only') {
+                await this.page.locator('div').filter({ hasText: /^Apply$/ }).click();
+            } if (option === 'following') {
+                await this.page.getByLabel('This and the following lessons').click();
+                await this.page.locator('div').filter({ hasText: /^Apply$/ }).click();
+            }
+        } 
+    }
+
     // Check lesson info on BO
-    public async checkLessonInfo (lessonName: string, lessonType: 'oneTimeIndividual' | 'oneTimeGroup' | 'recurringIndividual' | 'recurringGroup') {
+    public async checkUpdatedLessonInfo (lessonName: string, lessonType: 'oneTime' |'recurring') {
         const boLesson = new BOLesson(this.page);
         const lessonDate = await boLesson.getNextLessonDateLink('nextLessonDate');
         const endDate = await boLesson.getEndDate();
@@ -162,37 +202,13 @@ export class BOLesson {
         await this.page.getByText('Teaching MediumOnline').click();
         await this.page.getByText(`Lesson Name${lessonName}`).click();
         await this.page.getByText('Location[E2E] Brand A - Center').click();
-        // await this.page.getByText('Teacher[E2E] Kim Ngan CM').click();
         await this.page.getByText(`${MASTER_NAME.classroomName}, ${LESSON_NAME.newClassroom}`).click();
         await this.page.getByText('Lesson Capacity20').click();
         await this.page.getByText('Cancellation ReasonActs of nature').click();
-        await lsCommonTest.scrollPage();
-        switch (lessonType) {
-            case 'oneTimeIndividual':
-                // await this.page.getByText('Teaching MethodIndividual').click();
-                await this.page.getByText('Saving OptionOne Time').click();
-                break;
-        
-            case 'oneTimeGroup':
-                // await this.page.getByText('Teaching MethodGroup').click();
-                // await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click(); // bug
-                await this.page.getByText(`Class${MASTER_NAME.className}`).click();
-                await this.page.getByText('Saving OptionOne Time').click();
-                break;
-        
-            case 'recurringIndividual':
-                // await this.page.getByText('Teaching MethodIndividual').click();
-                await this.page.getByText('Saving OptionWeekly Recurring').click();
-                await this.page.getByText(`End Date${endDate}`).click();
-                break;
-        
-            case 'recurringGroup':
-                // await this.page.getByText('Teaching MethodGroup').click();
-                // await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click(); // bug
-                // await this.page.getByText(`Class${MASTER_NAME.className}`).click();
-                // await this.page.getByText('Saving OptionWeekly Recurring').click();
-                await this.page.getByText(`End Date${endDate}`).click();
-                break;
+        if (lessonType === 'oneTime') {
+                await this.page.getByText(LESSON_NAME.teacherOneTimeIndividual).click();
+        } else if (lessonType === 'recurring') {
+                await this.page.getByText(LESSON_NAME.teacherRecurringGroup).click();
           }
     }
 
@@ -260,5 +276,22 @@ export class BOLesson {
         await this.page.getByRole('gridcell', { name: attendanceReason }).locator('span').click();
         await this.page.getByRole('gridcell', { name: attendanceNotice }).locator('span').click();
         await this.page.getByRole('gridcell', { name: 'True' }).locator('span').first().click();  
+    }   
+    
+    // Remove student on BO
+    public async removeStudentOnBO (
+        lessonType: 'oneTimeIndividual' | 'recurringGroup',
+        option?: 'only' | 'following'
+    ): Promise<void> {
+        await this.page.getByLabel('Select all items').check();
+        await this.page.getByTestId('ActionPanel__trigger').click();
+        await this.page.getByLabel('Remove Student').click();
+
+        if (lessonType === 'recurringGroup' && option === 'only') {
+            await this.page.getByRole('button', { name: 'Apply' }).click();
+        } else if (lessonType === 'recurringGroup' && option === 'following') {
+            await this.page.getByLabel('This and the following lessons').check();
+            await this.page.getByRole('button', { name: 'Apply' }).click();
+        }
     }    
 }

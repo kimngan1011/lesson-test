@@ -6,8 +6,6 @@ import { randomText } from "../utils/random";
 import { LESSON_URL } from "../utils/url";
 import { BOLesson } from "../pages/bo-lesson";
 import { CreateLesson } from "../pages/create-lesson";
-import { LESSON_NAME } from "../utils/masterData";
-
 
 test('Edit one time individual lesson on BO', async ({ page }) => {
     const boLesson = new BOLesson(page);
@@ -22,7 +20,7 @@ test('Edit one time individual lesson on BO', async ({ page }) => {
     await boLesson.openLessonDetail();
     await boLesson.editLesson(lessonName,'oneTimeIndividual');
     await showMessage.editLessonBO();
-    await boLesson.checkLessonInfo(lessonName,'oneTimeIndividual')
+    await boLesson.checkUpdatedLessonInfo(lessonName, 'oneTime')
     await boLesson.collectAttendanceOnBO('attend');
     await showMessage.collectAttendaneBO();
     await page.waitForTimeout(15000);
@@ -40,12 +38,12 @@ test('Edit recurring individual lesson with this and the following on BO', async
     const checkLCInfo = new CreateLesson(page);
 
     await loginBO(page, 'partial');
-    await boLesson.filterTeacher('recurringGroup');
+    await boLesson.filterTeacher('recurringIndividual');
     await boLesson.publishLessonOnBO();
     await boLesson.openLessonDetail();
     await boLesson.editLesson(lessonName,'recurringGroup', 'following');
     await showMessage.editLessonBO();
-    await boLesson.checkLessonInfo(lessonName,'recurringIndividual');
+    await boLesson.checkUpdatedLessonInfo(lessonName,'recurring')
     await boLesson.collectAttendanceOnBO('late');
     await showMessage.collectAttendaneBO();
     await page.waitForTimeout(15000);
@@ -67,7 +65,7 @@ test('Edit recurring group lesson with only this lesson on BO', async ({ page })
     await boLesson.openLessonDetail();
     await boLesson.editLesson(lessonName,'recurringGroup', 'only');
     await showMessage.editLessonBO();
-    await boLesson.checkLessonInfo(lessonName,'recurringGroup');
+    await boLesson.checkUpdatedLessonInfo(lessonName,'recurring')
     await boLesson.collectAttendanceOnBO('absent');
     await showMessage.collectAttendaneBO();
     await page.waitForTimeout(15000);
@@ -86,11 +84,11 @@ test('Edit one time group lesson on BO', async ({ page }) => {
 
     await loginBO(page, 'partial');
     await page.pause();
-    await boLesson.filterTeacher('oneTimeIndividual');
+    await boLesson.filterTeacher('oneTimeGroup');
     await boLesson.openLessonDetail();
     await boLesson.editLesson(lessonName,'oneTimeIndividual');
     await showMessage.editLessonBO();
-    await boLesson.checkLessonInfo(lessonName,'oneTimeIndividual')
+    await boLesson.checkUpdatedLessonInfo(lessonName, 'oneTime')
     await boLesson.collectAttendanceOnBO('allAttend');
     await showMessage.collectAttendaneBO();
     await page.waitForTimeout(15000);

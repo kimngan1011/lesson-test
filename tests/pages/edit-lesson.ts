@@ -4,6 +4,7 @@ import { LsCommonTest } from "./common-test";
 import { LsPopup } from "./lesson-popup";
 import { MASTER_NAME, LESSON_NAME } from "../utils/masterData";
 import { LESSON_URL } from "../utils/url";
+import { BOLesson } from "./bo-lesson";
 export class EditLesson {
     readonly page: Page;
     page1: Page;
@@ -17,7 +18,7 @@ export class EditLesson {
     ): Promise<void> {
         const lsCommonTest = new LsCommonTest(this.page);
         const lessonDialog = new LsPopup(this.page);
-    
+
         // Click the Edit button
         await lsCommonTest.clickOnExactButton('Edit');
     
@@ -51,12 +52,34 @@ export class EditLesson {
         }
     }
     
-    public async checkLessonInfo () {
+    public async checkLessonInfoSF () {
         const viewNextDate = await this.getNextLessonDate();
         await this.page.locator("lightning-formatted-text").filter({ hasText: 'updated' }).click();
         await this.page.locator("lightning-formatted-text").filter({ hasText: `${viewNextDate}, ${LESSON_NAME.newStartTime}` }).click();
         await this.page.locator("lightning-formatted-text").filter({ hasText: `${viewNextDate}, ${LESSON_NAME.newEndTime}` }).click();
         await this.page.locator("lightning-formatted-text").filter({ hasText: 'Online' }).click();
+    }
+
+    public async checkLessonInfoBO (lessonType: 'oneTime' |'recurring') {
+        const boLesson = new BOLesson(this.page);
+        const lessonDate = await boLesson.getNextLessonDateLink('nextLessonDate');
+        const endDate = await boLesson.getEndDate();
+        const lsCommonTest = new LsCommonTest(this.page);
+
+        await this.page.getByText(`Draft${lessonDate}`).click();
+        await this.page.getByText(`Lesson Date${lessonDate}`).click();
+        await this.page.getByText(LESSON_NAME.newStartTime).click();
+        await this.page.getByText(LESSON_NAME.newEndTime).click();
+        await this.page.getByText('Teaching MediumOnline').click();
+        await this.page.getByText('Lesson Nameupdated').click();
+        await this.page.getByText('Location[E2E] Brand A - Center').click();
+        await this.page.getByText(`${MASTER_NAME.classroomName}, ${LESSON_NAME.newClassroom}`).click();
+        await this.page.getByText('Lesson Capacity20').click();
+        if (lessonType === 'oneTime') {
+                await this.page.getByText(LESSON_NAME.teacherOneTime).click();
+        } else if (lessonType === 'recurring') {
+                await this.page.getByText(LESSON_NAME.teacherRecurring).click();
+          }
     }
 
     public async getNextLessonDate () {

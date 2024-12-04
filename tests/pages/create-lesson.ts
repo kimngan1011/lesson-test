@@ -4,6 +4,7 @@ import { LsCommonTest } from "./common-test";
 import { LsPopup } from "./lesson-popup";
 import { MASTER_NAME, LESSON_NAME } from "../utils/masterData";
 import { LESSON_URL } from "../utils/url";
+import { BOLesson } from "./bo-lesson";
 export class CreateLesson {
     readonly page: Page;
     page1: Page;
@@ -60,6 +61,56 @@ export class CreateLesson {
     
         return lessonName;
     }
+
+    // Check lesson info on BO
+    public async checkLessonInfo (lessonName: string, lessonType: 'oneTimeIndividual' | 'oneTimeGroup' | 'recurringIndividual' | 'recurringGroup') {
+        const boLesson = new BOLesson(this.page);
+        const lessonDate = await boLesson.getLessonDateLink('lessonDate');
+        const endDate = await boLesson.getEndDate();
+        const lsCommonTest = new LsCommonTest(this.page);
+
+        await this.page.getByText(`Draft${lessonDate}`).click();
+        await this.page.getByText(`Lesson Date${lessonDate}`).click();
+        await this.page.getByText(LESSON_NAME.startTime).click();
+        await this.page.getByText(LESSON_NAME.endTime).click();
+        await this.page.getByText('Teaching MediumOnline').click();
+        await this.page.getByText(`Lesson Name${lessonName}`).click();
+        await this.page.getByText('Location[E2E] Brand A - Center').click();
+        await this.page.getByText(MASTER_NAME.classroomName).click();
+        await this.page.getByText('Lesson Capacity10').click();
+        await lsCommonTest.scrollPage();
+        switch (lessonType) {
+            case 'oneTimeIndividual':
+                await this.page.getByText(LESSON_NAME.teacherOneTimeIndividual).click();
+                await this.page.getByText('Teaching MethodIndividual').click();
+                await this.page.getByText('Saving OptionOne Time').click();
+                break;
+        
+            case 'oneTimeGroup':
+                await this.page.getByText(LESSON_NAME.teacherOneTimeGroup).click();
+                await this.page.getByText('Teaching MethodGroup').click();
+                await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click();
+                await this.page.getByText(`Class${MASTER_NAME.className}`).click();
+                await this.page.getByText('Saving OptionOne Time').click();
+                break;
+        
+            case 'recurringIndividual':
+                await this.page.getByText(LESSON_NAME.teacherRecurringIndividual).click();
+                await this.page.getByText('Teaching MethodIndividual').click();
+                await this.page.getByText('Saving OptionWeekly Recurring').click();
+                await this.page.getByText(`End Date${endDate}`).click();
+                break;
+        
+            case 'recurringGroup':
+                await this.page.getByText(LESSON_NAME.teacherRecurringGroup).click();
+                await this.page.getByText('Teaching MethodGroup').click();
+                await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click(); // bug
+                await this.page.getByText(`Class${MASTER_NAME.className}`).click();
+                await this.page.getByText('Saving OptionWeekly Recurring').click();
+                await this.page.getByText(`End Date${endDate}`).click();
+                break;
+          }
+    }
     
     // Check lesson report info
     public async checkLessonReportInfo(value) {
@@ -95,10 +146,12 @@ export class CreateLesson {
         if (options?.save) {
             await lsCommonTest.clickOnExactButton('Save');
         }
-    
-        // Step 6: Verify the student was added
-        await this.page.getByText('Student Sessions(1)', { exact: true }).click();
-    }
+    }    
+
+    // Check student session info
+    public async checkStudentSessionInfo(studentSessionInfo: string) {
+        await this.page.getByText(studentSessionInfo, { exact: true }).click(); // Student Sessions(1)
+    };
 
     // Check LA info
     public async checkStudentSession (value: string, info: string) {
@@ -129,7 +182,11 @@ export class CreateLesson {
         if (options?.save) {
             await lsCommonTest.clickOnExactButton('Save');
         }
-        await this.page.getByText('Lesson Teachers(1)', { exact: true }).click();
+    }
+
+    // Check Lesson Teacher
+    public async checkLessonTeacher (lessonTeacherInfo: string) {
+        await this.page.getByText(lessonTeacherInfo, { exact: true }).click(); // Lesson Teachers(1)
     }
 
     // Check teacher on lesson schedule 

@@ -14,4 +14,9 @@ export class MessageLesson {
     public async collectAttendaneBO () {
         await this.page.getByText('You have collected the attendance successfully').click();
     }
+
+    // Remove student on BO
+    public async removeStudentBO () {
+        await this.page.getByText('Removed successfully').click();
+    }
 }    

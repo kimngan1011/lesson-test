@@ -18,21 +18,14 @@ export const MASTER_NAME = {
     closedDateName: "Closed date Ngan 01",
 };
 
-const currentDate = new Date();
-const nextDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
-const nextLessonDate = nextDate.getDate() + " " + nextDate.toLocaleString("default", { month: "short" }) + " " + nextDate.getFullYear();
-
-const viewNextDate = nextDate.getDate() + "/" + (nextDate.getMonth() + 1) + "/" + nextDate.getFullYear();
-
 export const LESSON_NAME = {
-    nextLessonDate,
-    viewNextDate,
     startTime: "09:00 am",
     newStartTime: "11:00 am",
     endTime: "10:00 am",
     newEndTime: "12:00 pm",
     newClassroom: `CR02 - ${centerName}`,
-    teacherRecurring: "[E2E][Lesson] Kim Ngan SPU",
-    teacherOneTime: '[E2E] Kim Ngan Teacher',
-    teacherAdded: '[E2E] Kim Ngan CM',
+    teacherRecurringIndividual: "[E2E][Lesson] Kim Ngan SPU",
+    teacherOneTimeIndividual: '[E2E] Kim Ngan Teacher',
+    teacherOneTimeGroup: 'KimNgan PT Staff 01',
+    teacherRecurringGroup: '[E2E] Kim Ngan CM',
 }

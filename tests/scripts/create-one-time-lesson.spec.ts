@@ -17,6 +17,8 @@ test('Create one time individual lesson with student and teacher', async ({ page
     await lsCommonTest.searchList(individualLessonName); // open lesson detail
     await createLesson.addTeacher(LESSON_NAME.teacherOneTime); // add student
     await createLesson.addStudent(lessonAllocationName); // add teacher
+    await createLesson.checkStudentSessionInfo('Student Sessions(1)');
+    await createLesson.checkLessonTeacher('Lesson Teachers(1)');
     await lsCommonTest.redirectToTab('Report'); // check report info
     await createLesson.checkLessonReportInfo('Teaching MethodIndividual');
     await createLesson.checkLessonReportInfo('Lesson Report StatusDraft');
@@ -25,7 +27,7 @@ test('Create one time individual lesson with student and teacher', async ({ page
     await loginBO(page, 'full'); // login BO
     await boLesson.searchStudent(lessonAllocationName); // check lesson info on BO
     await boLesson.openLessonDetail();
-    await page.waitForTimeout(5000);
+    await createLesson.checkLessonInfo(individualLessonName, 'oneTimeIndividual');
     await lsCommonTest.redirectToTab ('Student');
     await lsCommonTest.redirectToTab ('Report');
 });
@@ -41,6 +43,8 @@ test('Create one time group lesson with student and teacher', async ({ page }) =
     await lsCommonTest.searchList(grouplLessonName); // open lesson detail
     await createLesson.addTeacher(LESSON_NAME.teacherOneTime); // add student
     await createLesson.addStudent(lessonAllocationName); // add teacher
+    await createLesson.checkStudentSessionInfo('Student Sessions(1)');
+    await createLesson.checkLessonTeacher('Lesson Teachers(1)');
     await lsCommonTest.redirectToTab('Report'); // check report info
     await createLesson.checkLessonReportInfo('Teaching MethodGroup');
     await createLesson.checkLessonReportInfo('Lesson Report StatusDraft');
@@ -49,7 +53,7 @@ test('Create one time group lesson with student and teacher', async ({ page }) =
     await loginBO(page, 'full'); // login BO
     await boLesson.searchStudent(lessonAllocationName); // check lesson info on BO
     await boLesson.openLessonDetail();
-    await page.waitForTimeout(5000);
+    await createLesson.checkLessonInfo(grouplLessonName, 'oneTimeGroup');
     await lsCommonTest.redirectToTab ('Student');
     await lsCommonTest.redirectToTab ('Report');
 });

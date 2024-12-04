@@ -18,11 +18,11 @@ test('Edit one time individual lesson info', async ({ page }) => {
     await lsCommonTest.searchList(individualLessonName);
     await editLesson.editLesson('oneTimeIndividual');
     await createLesson.addStudent(lessonAllocationName);
-    await editLesson.checkLessonInfo();
+    await editLesson.checkLessonInfoSF();
     await loginBO(page, 'full');
     await boLesson.searchStudent(lessonAllocationName);
     await boLesson.openLessonDetail(true);
-    await page.waitForTimeout(5000); 
+    await editLesson.checkLessonInfoBO('oneTime');
     // check lesson name, date, time, classroom, lesson capacity, teaching medium    
 })
 
@@ -38,14 +38,14 @@ test('Edit recurring group lesson info with only this lesson', async ({ page }) 
     await lsCommonTest.searchRecurringLesson(groupLessonName);
     await editLesson.editLesson('recurringGroup', 'only');
     await createLesson.addStudent(lessonAllocationName, { save: true, scope: 'following' });
-    await editLesson.checkLessonInfo();
+    await editLesson.checkLessonInfoSF();
     await createLesson.checkLessonScheduleInfo('updated');
     await page.waitForTimeout(5000); // check lesson schedule info
     await loginBO(page, 'full');
     await boLesson.searchStudent(lessonAllocationName);
     await page.waitForTimeout(5000); // check lesson info
     await boLesson.openLessonDetail(true);
-    await page.waitForTimeout(5000); 
+    await editLesson.checkLessonInfoBO('recurring');
 })
 
 test('Edit recurring group lesson info with this and the following', async ({ page }) => {
@@ -60,10 +60,11 @@ test('Edit recurring group lesson info with this and the following', async ({ pa
     await lsCommonTest.searchRecurringLesson(groupLessonName);
     await editLesson.editLesson('recurringGroup', 'following');
     await createLesson.addStudent(lessonAllocationName, { save: true, scope: 'following' });
-    await editLesson.checkLessonInfo();
+    await editLesson.checkLessonInfoSF();
     await createLesson.checkLessonScheduleInfo('updated'); // check lesson info in lesson schedule
     await loginBO(page, 'full');
     await boLesson.searchStudent(lessonAllocationName); // check lesson info on lesson list
     await boLesson.openLessonDetail(true); // check lesson detail
+    await editLesson.checkLessonInfoBO('recurring');
 })
 

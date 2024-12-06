@@ -22,7 +22,7 @@ test('Edit one time individual lesson info', async ({ page }) => {
     await loginBO(page, 'full');
     await boLesson.searchStudent(lessonAllocationName);
     await boLesson.openLessonDetail(true);
-    await editLesson.checkLessonInfoBO('oneTime');
+    await editLesson.checkLessonInfoBO('oneTimeIndividual');
     // check lesson name, date, time, classroom, lesson capacity, teaching medium    
 })
 
@@ -45,7 +45,7 @@ test('Edit recurring group lesson info with only this lesson', async ({ page }) 
     await boLesson.searchStudent(lessonAllocationName);
     await page.waitForTimeout(5000); // check lesson info
     await boLesson.openLessonDetail(true);
-    await editLesson.checkLessonInfoBO('recurring');
+    await editLesson.checkLessonInfoBO('recurringGroup');
 })
 
 test('Edit recurring group lesson info with this and the following', async ({ page }) => {
@@ -65,6 +65,6 @@ test('Edit recurring group lesson info with this and the following', async ({ pa
     await loginBO(page, 'full');
     await boLesson.searchStudent(lessonAllocationName); // check lesson info on lesson list
     await boLesson.openLessonDetail(true); // check lesson detail
-    await editLesson.checkLessonInfoBO('recurring');
+    await editLesson.checkLessonInfoBO('recurringGroup');
 })
 

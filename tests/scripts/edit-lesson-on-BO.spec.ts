@@ -20,7 +20,7 @@ test('Edit one time individual lesson on BO', async ({ page }) => {
     await boLesson.openLessonDetail();
     await boLesson.editLesson(lessonName,'oneTimeIndividual');
     await showMessage.editLessonBO();
-    await boLesson.checkUpdatedLessonInfo(lessonName, 'oneTime')
+    await boLesson.checkUpdatedLessonInfo(lessonName, 'oneTimeIndividual')
     await boLesson.collectAttendanceOnBO('attend');
     await showMessage.collectAttendaneBO();
     await page.waitForTimeout(15000);
@@ -43,7 +43,7 @@ test('Edit recurring individual lesson with this and the following on BO', async
     await boLesson.openLessonDetail();
     await boLesson.editLesson(lessonName,'recurringGroup', 'following');
     await showMessage.editLessonBO();
-    await boLesson.checkUpdatedLessonInfo(lessonName,'recurring')
+    await boLesson.checkUpdatedLessonInfo(lessonName,'recurringIndividual')
     await boLesson.collectAttendanceOnBO('late');
     await showMessage.collectAttendaneBO();
     await page.waitForTimeout(15000);
@@ -65,7 +65,7 @@ test('Edit recurring group lesson with only this lesson on BO', async ({ page })
     await boLesson.openLessonDetail();
     await boLesson.editLesson(lessonName,'recurringGroup', 'only');
     await showMessage.editLessonBO();
-    await boLesson.checkUpdatedLessonInfo(lessonName,'recurring')
+    await boLesson.checkUpdatedLessonInfo(lessonName,'recurringGroup')
     await boLesson.collectAttendanceOnBO('absent');
     await showMessage.collectAttendaneBO();
     await page.waitForTimeout(15000);
@@ -88,7 +88,7 @@ test('Edit one time group lesson on BO', async ({ page }) => {
     await boLesson.openLessonDetail();
     await boLesson.editLesson(lessonName,'oneTimeIndividual');
     await showMessage.editLessonBO();
-    await boLesson.checkUpdatedLessonInfo(lessonName, 'oneTime')
+    await boLesson.checkUpdatedLessonInfo(lessonName, 'oneTimeGroup')
     await boLesson.collectAttendanceOnBO('allAttend');
     await showMessage.collectAttendaneBO();
     await page.waitForTimeout(15000);

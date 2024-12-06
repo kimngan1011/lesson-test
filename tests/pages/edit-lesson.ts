@@ -60,7 +60,10 @@ export class EditLesson {
         await this.page.locator("lightning-formatted-text").filter({ hasText: 'Online' }).click();
     }
 
-    public async checkLessonInfoBO (lessonType: 'oneTime' |'recurring') {
+    // Check lesson info on BO after editing
+    public async checkLessonInfoBO (
+        lessonType: 'oneTimeIndividual' | 'oneTimeGroup' | 'recurringIndividual' | 'recurringGroup'){
+
         const boLesson = new BOLesson(this.page);
         const lessonDate = await boLesson.getNextLessonDateLink('nextLessonDate');
         const endDate = await boLesson.getEndDate();
@@ -75,10 +78,19 @@ export class EditLesson {
         await this.page.getByText('Location[E2E] Brand A - Center').click();
         await this.page.getByText(`${MASTER_NAME.classroomName}, ${LESSON_NAME.newClassroom}`).click();
         await this.page.getByText('Lesson Capacity20').click();
-        if (lessonType === 'oneTime') {
-                await this.page.getByText(LESSON_NAME.teacherOneTime).click();
-        } else if (lessonType === 'recurring') {
-                await this.page.getByText(LESSON_NAME.teacherRecurring).click();
+        switch (lessonType) {
+            case 'oneTimeIndividual':
+                await this.page.getByText('Teaching MethodIndividual').click();
+                await this.page.getByText('Saving OptionOne Time').click();
+                break;
+        
+            case 'recurringGroup':
+                await this.page.getByText('Teaching MethodGroup').click();
+                await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click(); // bug
+                await this.page.getByText(`Class${MASTER_NAME.className}`).click();
+                await this.page.getByText('Saving OptionWeekly Recurring').click();
+                await this.page.getByText(`End Date${endDate}`).click();
+                break;
           }
     }
 
@@ -94,4 +106,56 @@ export class EditLesson {
 
         return nextLessonDate;
     }
-}
+
+    // Remove a student from a lesson
+    public async removeStudent(options?: { save?: boolean; scope?: 'following' }): Promise<void> {
+        const lsCommonTest = new LsCommonTest(this.page);
+    
+        await this.page.waitForTimeout(3000);
+        await this.page
+                .getByRole('columnheader', { name: 'Choose a Row Select All' }).locator('span').nth(2).click();
+        await lsCommonTest.clickOnExactButton('Remove Students');
+    
+        // Step 4: Select "This and the following lessons" if required
+        if (options?.scope === 'following') {
+            await this.page
+                .locator('label')
+                .filter({ hasText: 'This and the following lessons' })
+                .locator('span')
+                .first()
+                .click();
+            await this.page.getByRole('button', { name: 'Save' }).click();
+    
+        }
+    
+        // Step 5: Click "Save" if required
+        if (options?.save) {
+            await lsCommonTest.clickOnExactButton('Save');
+        }
+    }
+
+    // Remove a teacher from a lesson
+    public async removeTeacher(options?: { save?: boolean; scope?: 'following' }): Promise<void> {
+        const lsCommonTest = new LsCommonTest(this.page);
+    
+        await lsCommonTest.showActionAndClickItem('Delete');
+        await lsCommonTest.clickOnExactButton('Confirm');
+    
+        // Step 4: Select "This and the following lessons" if required
+        if (options?.scope === 'following') {
+            await this.page
+                .locator('label')
+                .filter({ hasText: 'This and the following lessons' })
+                .locator('span')
+                .first()
+                .click();
+            await this.page.getByRole('button', { name: 'Save' }).click();
+    
+        }
+    
+        // Step 5: Click "Save" if required
+        if (options?.save) {
+            await lsCommonTest.clickOnExactButton('Save');
+        }
+    }
+}        

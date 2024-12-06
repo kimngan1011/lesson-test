@@ -63,7 +63,10 @@ export class CreateLesson {
     }
 
     // Check lesson info on BO
-    public async checkLessonInfo (lessonName: string, lessonType: 'oneTimeIndividual' | 'oneTimeGroup' | 'recurringIndividual' | 'recurringGroup') {
+    public async checkLessonInfo (
+        lessonName: string,
+        lessonType: 'oneTimeIndividual' | 'oneTimeGroup' | 'recurringIndividual' | 'recurringGroup') {
+            
         const boLesson = new BOLesson(this.page);
         const lessonDate = await boLesson.getLessonDateLink('lessonDate');
         const endDate = await boLesson.getEndDate();
@@ -154,14 +157,54 @@ export class CreateLesson {
     };
 
     // Check LA info
-    public async checkStudentSession (value: string, info: string) {
+    public async getLessonAllocatedBefore (studentName: string) {
         const page1Promise = this.page.waitForEvent('popup');
-        await this.page.getByRole('link', { name: value }).click();
-        await this.page.waitForTimeout(5000);
+        await this.page.getByRole('link', { name: studentName }).click();
         const page1 = await page1Promise;
-        page1.getByText(info); // 1/90 Lesson Allocated or 5/90 Lesson Allocated
-        page1.close();
+        await this.page.waitForTimeout(5000);
+
+        const url = await page1.url();
+        const lessonAllocatedBefore = await page1.getByRole('alert').textContent();
+        const splitLessonAllocatedBefore = lessonAllocatedBefore?.split('/')
+        const splitassignedLessonBefore = splitLessonAllocatedBefore?.[0];
+        const assignedLessonBefore = splitassignedLessonBefore?.slice(splitassignedLessonBefore?.length-1);
+
+        await page1.close();
+        return {assignedLessonBefore, url}
     };
+
+    public async getLessonAllocatedAfter () {
+        const lessonAllocatedAfter = await this.page.getByRole('alert').textContent();
+
+        const splitLessonAllocatedAfter = lessonAllocatedAfter?.split('/')
+        const splitassignedLessonAfter = splitLessonAllocatedAfter?.[0];
+        const assignedLessonAfter = splitassignedLessonAfter?.slice(splitassignedLessonAfter?.length-1);
+
+        return assignedLessonAfter;
+    }
+
+    public async increaseAssignedLesson (lessonAssignedBefore: string, lessonAllocatedAfter: string) {
+
+        if (Number(lessonAllocatedAfter) === Number(lessonAssignedBefore || '0') + 1) {
+            return true;
+        } else return false;
+    }
+
+    public async decreaseAssignedLesson (lessonAssignedBefore: string, lessonAllocatedAfter: string) {
+
+        if (Number(lessonAllocatedAfter) === Number(lessonAssignedBefore || '0') - 1) {
+            return true;
+        } else return false;
+    }
+
+    public async removeAllAssignedLesson (lessonAllocatedAfter: string) {
+
+        if (Number(lessonAllocatedAfter) === 0) {
+            return true;
+        } else return false;
+    }
+
+
 
 
     // Add a teacher to a lesson

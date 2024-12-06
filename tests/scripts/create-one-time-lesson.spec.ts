@@ -15,7 +15,7 @@ test('Create one time individual lesson with student and teacher', async ({ page
     const boLesson = new BOLesson(page);
 
     await lsCommonTest.searchList(individualLessonName); // open lesson detail
-    await createLesson.addTeacher(LESSON_NAME.teacherOneTime); // add student
+    await createLesson.addTeacher(LESSON_NAME.teacherOneTimeIndividual); // add student
     await createLesson.addStudent(lessonAllocationName); // add teacher
     await createLesson.checkStudentSessionInfo('Student Sessions(1)');
     await createLesson.checkLessonTeacher('Lesson Teachers(1)');
@@ -23,7 +23,6 @@ test('Create one time individual lesson with student and teacher', async ({ page
     await createLesson.checkLessonReportInfo('Teaching MethodIndividual');
     await createLesson.checkLessonReportInfo('Lesson Report StatusDraft');
     await lsCommonTest.redirectToTab('Participants'); // check LA info
-    await createLesson.checkStudentSession(lessonAllocationName, '1/90 Lesson Allocated');
     await loginBO(page, 'full'); // login BO
     await boLesson.searchStudent(lessonAllocationName); // check lesson info on BO
     await boLesson.openLessonDetail();
@@ -41,7 +40,7 @@ test('Create one time group lesson with student and teacher', async ({ page }) =
     const boLesson = new BOLesson(page);
 
     await lsCommonTest.searchList(grouplLessonName); // open lesson detail
-    await createLesson.addTeacher(LESSON_NAME.teacherOneTime); // add student
+    await createLesson.addTeacher(LESSON_NAME.teacherOneTimeGroup); // add student
     await createLesson.addStudent(lessonAllocationName); // add teacher
     await createLesson.checkStudentSessionInfo('Student Sessions(1)');
     await createLesson.checkLessonTeacher('Lesson Teachers(1)');
@@ -49,7 +48,6 @@ test('Create one time group lesson with student and teacher', async ({ page }) =
     await createLesson.checkLessonReportInfo('Teaching MethodGroup');
     await createLesson.checkLessonReportInfo('Lesson Report StatusDraft');
     await lsCommonTest.redirectToTab('Participants'); // check LA info
-    await createLesson.checkStudentSession(lessonAllocationName, '1/90 Lesson Allocated');
     await loginBO(page, 'full'); // login BO
     await boLesson.searchStudent(lessonAllocationName); // check lesson info on BO
     await boLesson.openLessonDetail();

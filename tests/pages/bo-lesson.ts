@@ -53,7 +53,7 @@ export class BOLesson {
     }
 
     // Get Lesson Date
-    public async getLessonDateLink (format: 'lessonDate' | 'lAStartDate') {
+    public async getLessonDateLink (format: 'lessonDate' | 'lAStartDate' | 'orderStartDate') {
         const date = new Date();
 
         const year = date.getFullYear();
@@ -63,11 +63,16 @@ export class BOLesson {
         if (format === 'lessonDate') {
             const lessonDateLink = `${year}/${month}/${day}`;
             return lessonDateLink;
-        }else if (format === 'lAStartDate') {
+        } if (format === 'orderStartDate') {
+            const lessonDateLink = `${day}/${month}/${year}`;
+            return lessonDateLink;
+        } else if (format === 'lAStartDate') {
             const lAStartDate = `${year}-${month}-${day}`;
             return lAStartDate;
         }
     }
+
+    public 
 
     // Get Next Lesson Date
     public async getNextLessonDateLink (format: 'nextLessonDate' | 'lAEndDate') {
@@ -189,7 +194,10 @@ export class BOLesson {
     }
 
     // Check lesson info on BO
-    public async checkUpdatedLessonInfo (lessonName: string, lessonType: 'oneTime' |'recurring') {
+    public async checkUpdatedLessonInfo (
+        lessonName: string,
+        lessonType: 'oneTimeIndividual' | 'oneTimeGroup' | 'recurringIndividual' | 'recurringGroup') {
+            
         const boLesson = new BOLesson(this.page);
         const lessonDate = await boLesson.getNextLessonDateLink('nextLessonDate');
         const endDate = await boLesson.getEndDate();
@@ -205,10 +213,36 @@ export class BOLesson {
         await this.page.getByText(`${MASTER_NAME.classroomName}, ${LESSON_NAME.newClassroom}`).click();
         await this.page.getByText('Lesson Capacity20').click();
         await this.page.getByText('Cancellation ReasonActs of nature').click();
-        if (lessonType === 'oneTime') {
+        switch (lessonType) {
+            case 'oneTimeIndividual':
                 await this.page.getByText(LESSON_NAME.teacherOneTimeIndividual).click();
-        } else if (lessonType === 'recurring') {
+                await this.page.getByText('Teaching MethodIndividual').click();
+                await this.page.getByText('Saving OptionOne Time').click();
+                break;
+        
+            case 'oneTimeGroup':
+                await this.page.getByText(LESSON_NAME.teacherOneTimeGroup).click();
+                await this.page.getByText('Teaching MethodGroup').click();
+                await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click();
+                await this.page.getByText(`Class${MASTER_NAME.className}`).click();
+                await this.page.getByText('Saving OptionOne Time').click();
+                break;
+        
+            case 'recurringIndividual':
+                await this.page.getByText(LESSON_NAME.teacherRecurringIndividual).click();
+                await this.page.getByText('Teaching MethodIndividual').click();
+                await this.page.getByText('Saving OptionWeekly Recurring').click();
+                await this.page.getByText(`End Date${endDate}`).click();
+                break;
+        
+            case 'recurringGroup':
                 await this.page.getByText(LESSON_NAME.teacherRecurringGroup).click();
+                await this.page.getByText('Teaching MethodGroup').click();
+                await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click(); // bug
+                await this.page.getByText(`Class${MASTER_NAME.className}`).click();
+                await this.page.getByText('Saving OptionWeekly Recurring').click();
+                await this.page.getByText(`End Date${endDate}`).click();
+                break;
           }
     }
 

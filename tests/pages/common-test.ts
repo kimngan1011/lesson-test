@@ -7,7 +7,7 @@ export class LsCommonTest {
 
     // Navigate to page
     public async navigateToPage(url) {
-        await this.page.goto(url, { timeout: 10000 });
+        await this.page.goto(url, { timeout: 15000 });
     };
 
     // Click on button
@@ -40,7 +40,6 @@ export class LsCommonTest {
     }
 
     // Search data in a popup
-
     public async searchData(name: string, value: string) {
         await this.page.getByPlaceholder(name).click();
         await this.page.getByPlaceholder(name).fill(value);
@@ -76,6 +75,12 @@ export class LsCommonTest {
     // Show more and click menu
     public async showMoreAndClickItem (value: string) {
         await this.page.getByRole('button', { name: 'More Tabs' }).click();
+        await this.page.getByRole('menuitem', { name: value }).click();
+    }
+
+    // Show quick action and click menu
+    public async showActionAndClickItem (value: string) {
+        await this.page.locator('span').filter({ hasText: /^Show actions$/ }).first().click();
         await this.page.getByRole('menuitem', { name: value }).click();
     }
 

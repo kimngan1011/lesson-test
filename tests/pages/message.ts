@@ -19,4 +19,15 @@ export class MessageLesson {
     public async removeStudentBO () {
         await this.page.getByText('Removed successfully').click();
     }
+
+    // Remove teacher on SF
+    public async removeTeacherSF () {
+        await this.page.getByText('You have remove teacher successfully').click();
+    }
+
+
+    // Remove student on SF
+    public async removeStudentSF () {
+        await this.page.getByText('You have remove student successfully').click();
+    }
 }    

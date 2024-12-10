@@ -19,6 +19,7 @@ test('Remove student and teacher from one-time individual lesson', async ({ page
     const lsCommonTest = new LsCommonTest(page);
 
     await lsCommonTest.searchList(individualLessonName);
+    await lsCommonTest.openHyperlink(individualLessonName);
     await createLesson.addTeacher(LESSON_NAME.teacherOneTimeIndividual);
     await createLesson.addStudent(lessonAllocationName);
     const {url} = await createLesson.getLessonAllocatedBefore(lessonAllocationName);
@@ -48,7 +49,8 @@ test('Remove student and teacher from recurring individual lesson with only this
     const showMessage = new MessageLesson(page);
     const lsCommonTest = new LsCommonTest(page);
 
-    await lsCommonTest.searchRecurringLesson(individualLessonName);
+    await lsCommonTest.searchList(individualLessonName);
+    await lsCommonTest.openRecurringLesson(individualLessonName);
     await createLesson.addTeacher(LESSON_NAME.teacherRecurringIndividual, { save: true, scope: 'following' });
     await createLesson.addStudent(lessonAllocationName, { save: true, scope: 'following' });
     const {assignedLessonBefore, url} = await createLesson.getLessonAllocatedBefore(lessonAllocationName);
@@ -77,7 +79,8 @@ test('Remove student and teacher from recurring group lesson with following less
     const showMessage = new MessageLesson(page);
     const lsCommonTest = new LsCommonTest(page);
 
-    await lsCommonTest.searchRecurringLesson(groupLessonName);
+    await lsCommonTest.searchList(groupLessonName);
+    await lsCommonTest.openRecurringLesson(groupLessonName);
     await createLesson.addTeacher(LESSON_NAME.teacherRecurringIndividual, { save: true, scope: 'following' });
     await createLesson.addStudent(lessonAllocationName, { save: true, scope: 'following' });
     const {url} = await createLesson.getLessonAllocatedBefore(lessonAllocationName);

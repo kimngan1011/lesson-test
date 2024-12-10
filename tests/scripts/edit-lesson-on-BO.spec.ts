@@ -26,6 +26,7 @@ test('Edit one time individual lesson on BO', async ({ page }) => {
     await page.waitForTimeout(15000);
     await lsCommonTest.navigateToPage(LESSON_URL.lesson);
     await lsCommonTest.searchList(lessonName);
+    await lsCommonTest.openHyperlink(lessonName);
     await boLesson.checkAttendAndLate('Attend');
     await checkLCInfo.checkLessonScheduleInfo('Published');
 })
@@ -48,7 +49,8 @@ test('Edit recurring individual lesson with this and the following on BO', async
     await showMessage.collectAttendaneBO();
     await page.waitForTimeout(15000);
     await lsCommonTest.navigateToPage(LESSON_URL.lesson);
-    await lsCommonTest.searchRecurringLesson(lessonName);
+    await lsCommonTest.searchList(lessonName);
+    await lsCommonTest.openRecurringLesson(lessonName);
     await boLesson.checkAttendAndLate('Late');
     await checkLCInfo.checkLessonScheduleInfo('Published');
 })
@@ -71,6 +73,7 @@ test('Edit recurring group lesson with only this lesson on BO', async ({ page })
     await page.waitForTimeout(15000);
     await lsCommonTest.navigateToPage(LESSON_URL.lesson);
     await lsCommonTest.searchList(lessonName);
+    await lsCommonTest.openRecurringLesson(lessonName);
     await boLesson.checkAbsent('Absent', 'Family Reasons', 'On The Day');
     await checkLCInfo.checkLessonScheduleInfo('Published');
 })
@@ -94,6 +97,7 @@ test('Edit one time group lesson on BO', async ({ page }) => {
     await page.waitForTimeout(15000);
     await lsCommonTest.navigateToPage(LESSON_URL.lesson);
     await lsCommonTest.searchList(lessonName);
+    await lsCommonTest.openHyperlink(lessonName);
     await boLesson.checkAttendAndLate('Attend');
     await checkLCInfo.checkLessonScheduleInfo('Published');
 })

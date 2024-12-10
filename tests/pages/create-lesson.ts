@@ -24,10 +24,10 @@ export class CreateLesson {
         // Set timeout and navigate to the lesson page
         await this.page.setDefaultTimeout(timeout);
         await lsCommonTest.navigateToPage(LESSON_URL.lesson);
-        await lsCommonTest.clickOnButton('New');
+        await lsCommonTest.clickOnExactButton('New');
     
         // Fill in common fields
-        await lessonDialog.getLessonDate('*Date');
+        await lessonDialog.getLessonDate('*Date' );
         await lessonDialog.inputData('*Lesson Name', lessonName);
         await lessonDialog.inputData('* Start Time', LESSON_NAME.startTime);
         await lessonDialog.inputData('* End Time', LESSON_NAME.endTime);
@@ -57,7 +57,7 @@ export class CreateLesson {
     
         // Add classroom and save
         await lessonDialog.searchAndSelectData('Search for classroom', MASTER_NAME.classroomName);
-        await lsCommonTest.clickOnButton('Save');
+        await lsCommonTest.clickOnExactButton('Save');
     
         return lessonName;
     }

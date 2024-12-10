@@ -72,8 +72,6 @@ export class BOLesson {
         }
     }
 
-    public 
-
     // Get Next Lesson Date
     public async getNextLessonDateLink (format: 'nextLessonDate' | 'lAEndDate') {
         const date = new Date();
@@ -252,6 +250,12 @@ export class BOLesson {
         await this.page.getByTestId('ActionPanel__trigger').click();
         await this.page.getByLabel('Bulk Publish Lesson').click();
         await this.page.getByTestId('MFooterDialogConfirm__buttonConfirm').click();
+    }
+
+    // Check lesson status on BO
+    public async checkLessonStatusInfo (lessonStatusInfo) {
+        await this.page.getByText(lessonStatusInfo).click();
+
     }
 
     // Collect Attendance on BO

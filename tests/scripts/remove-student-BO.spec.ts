@@ -25,6 +25,7 @@ test ('Remove student from one-time individual lesson', async ({ page }) => {
     await page.waitForTimeout(15000);
     await lsCommonTest.navigateToPage(LESSON_URL.lesson);
     await lsCommonTest.searchList(lessonName);
+    await lsCommonTest.openHyperlink(lessonName);
     await checkStudentSessionInfo.checkStudentSessionInfo('Student Sessions(0)');
 })
 
@@ -46,6 +47,7 @@ test ('Remove student from recurring lesson with only this lesson', async ({page
     await page.waitForTimeout(15000);
     await lsCommonTest.navigateToPage(LESSON_URL.lesson);
     await lsCommonTest.searchList(lessonName);
+    await lsCommonTest.openRecurringLesson(lessonName);
     await checkStudentSessionInfo.checkStudentSessionInfo('Student Sessions(0)');
 })
 
@@ -66,6 +68,7 @@ test ('Remove student from recurring lesson with this and the following lesson',
     await showMessage.removeStudentBO();
     await page.waitForTimeout(15000);
     await lsCommonTest.navigateToPage(LESSON_URL.lesson);
-    await lsCommonTest.searchRecurringLesson(lessonName);
+    await lsCommonTest.searchList(lessonName);
+    await lsCommonTest.openRecurringLesson(lessonName);
     await checkStudentSessionInfo.checkStudentSessionInfo('Student Sessions(0)');
 })

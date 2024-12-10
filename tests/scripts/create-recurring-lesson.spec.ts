@@ -14,7 +14,8 @@ test('Create recurring group lesson with student and teacher', async ({ page }) 
     const lsCommonTest = new LsCommonTest(page); 
     const boLesson = new BOLesson(page);
 
-    await lsCommonTest.searchRecurringLesson(groupLessonName);
+    await lsCommonTest.searchList(groupLessonName);
+    await lsCommonTest.openRecurringLesson(groupLessonName);
     await createLesson.addTeacher(LESSON_NAME.teacherRecurringGroup, { save:true, scope: 'following' }); // add a teacher with following option
     await createLesson.addStudent(lessonAllocationName, { save: true, scope: 'following' }); // add a student with following option
     await createLesson.checkStudentSessionInfo('Student Sessions(1)');
@@ -40,7 +41,8 @@ test('Create recurring individual lesson with student and teacher', async ({ pag
     const lsCommonTest = new LsCommonTest(page); 
     const boLesson = new BOLesson(page);
 
-    await lsCommonTest.searchRecurringLesson(individualLessonName);
+    await lsCommonTest.searchList(individualLessonName);
+    await lsCommonTest.openRecurringLesson(individualLessonName);
     await createLesson.addTeacher(LESSON_NAME.teacherRecurringIndividual, { save:true }); // add a teacher with only option
     await createLesson.addStudent(lessonAllocationName, { save: true }); // add a student with only option
     await createLesson.checkStudentSessionInfo('Student Sessions(1)');

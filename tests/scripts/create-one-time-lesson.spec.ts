@@ -15,6 +15,7 @@ test('Create one time individual lesson with student and teacher', async ({ page
     const boLesson = new BOLesson(page);
 
     await lsCommonTest.searchList(individualLessonName); // open lesson detail
+    await lsCommonTest.openHyperlink(individualLessonName);
     await createLesson.addTeacher(LESSON_NAME.teacherOneTimeIndividual); // add student
     await createLesson.addStudent(lessonAllocationName); // add teacher
     await createLesson.checkStudentSessionInfo('Student Sessions(1)');
@@ -40,6 +41,7 @@ test('Create one time group lesson with student and teacher', async ({ page }) =
     const boLesson = new BOLesson(page);
 
     await lsCommonTest.searchList(grouplLessonName); // open lesson detail
+    await lsCommonTest.openHyperlink(grouplLessonName);
     await createLesson.addTeacher(LESSON_NAME.teacherOneTimeGroup); // add student
     await createLesson.addStudent(lessonAllocationName); // add teacher
     await createLesson.checkStudentSessionInfo('Student Sessions(1)');

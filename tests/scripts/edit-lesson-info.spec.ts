@@ -16,6 +16,7 @@ test('Edit one time individual lesson info', async ({ page }) => {
     const boLesson = new BOLesson(page);
 
     await lsCommonTest.searchList(individualLessonName);
+    await lsCommonTest.openHyperlink(individualLessonName);
     await editLesson.editLesson('oneTimeIndividual');
     await createLesson.addStudent(lessonAllocationName);
     await editLesson.checkLessonInfoSF();
@@ -35,7 +36,8 @@ test('Edit recurring group lesson info with only this lesson', async ({ page }) 
     const lsCommonTest = new LsCommonTest(page);
     const boLesson = new BOLesson(page);
 
-    await lsCommonTest.searchRecurringLesson(groupLessonName);
+    await lsCommonTest.searchList(groupLessonName);
+    await lsCommonTest.openRecurringLesson(groupLessonName);
     await editLesson.editLesson('recurringGroup', 'only');
     await createLesson.addStudent(lessonAllocationName, { save: true, scope: 'following' });
     await editLesson.checkLessonInfoSF();
@@ -57,7 +59,8 @@ test('Edit recurring group lesson info with this and the following', async ({ pa
     const lsCommonTest = new LsCommonTest(page);
     const boLesson = new BOLesson(page);
 
-    await lsCommonTest.searchRecurringLesson(groupLessonName);
+    await lsCommonTest.searchList(groupLessonName);
+    await lsCommonTest.openRecurringLesson(groupLessonName);
     await editLesson.editLesson('recurringGroup', 'following');
     await createLesson.addStudent(lessonAllocationName, { save: true, scope: 'following' });
     await editLesson.checkLessonInfoSF();

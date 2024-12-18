@@ -1,59 +1,59 @@
 import { test } from "../../playwright/fixtures";
 import { CreateLesson } from "../pages/create-lesson";
 import { LsCommonTest } from "../pages/common-test";
-import { loginBO } from "../sf-login-page";
 import { CreateLessonAllocation } from "../pages/create-lesson-allocation";
 import { LESSON_NAME } from "../utils/masterData";
-import { BOLesson } from "../pages/bo-lesson";
+import path from "path";
 
-test('Create one time individual lesson with student and teacher', async ({ page }) => {
-    const createLessonAllocation = new CreateLessonAllocation(page);
-    const lessonAllocationName = await createLessonAllocation.createLessonAllocation(); // create LA
-    const createLesson = new CreateLesson(page);
-    const individualLessonName = await createLesson.createLesson('oneTimeIndividual'); // create one-time individual lesson
-    const lsCommonTest = new LsCommonTest(page);
-    const boLesson = new BOLesson(page);
+test("Create one time individual lesson with student and teacher", async ({ page }) => {
+  const createLessonAllocation = new CreateLessonAllocation(page);
+  const { assignedLessonBefore, url } = await createLessonAllocation.openLADetail("783");
 
-    await lsCommonTest.searchList(individualLessonName); // open lesson detail
-    await lsCommonTest.openHyperlink(individualLessonName);
-    await createLesson.addTeacher(LESSON_NAME.teacherOneTimeIndividual); // add student
-    await createLesson.addStudent(lessonAllocationName); // add teacher
-    await createLesson.checkStudentSessionInfo('Student Sessions(1)');
-    await createLesson.checkLessonTeacher('Lesson Teachers(1)');
-    await lsCommonTest.redirectToTab('Report'); // check report info
-    await createLesson.checkLessonReportInfo('Teaching MethodIndividual');
-    await createLesson.checkLessonReportInfo('Lesson Report StatusDraft');
-    await lsCommonTest.redirectToTab('Participants'); // check LA info
-    await loginBO(page, 'full'); // login BO
-    await boLesson.searchStudent(lessonAllocationName); // check lesson info on BO
-    await boLesson.openLessonDetail();
-    await createLesson.checkLessonInfo(individualLessonName, 'oneTimeIndividual');
-    await lsCommonTest.redirectToTab ('Student');
-    await lsCommonTest.redirectToTab ('Report');
+  const createLesson = new CreateLesson(page);
+  const { lessonName, lessonCode, lessonDate } = await createLesson.createLesson("oneTimeIndividual"); // create one-time individual lesson
+
+  const lsCommonTest = new LsCommonTest(page);
+
+  await lsCommonTest.searchList(lessonName); // open lesson detail
+  await page.screenshot({ path: "lesson-info.png" });
+  const lessonCodeInfo = await createLesson.checkLessonCode("oneTime", lessonCode);
+  await lsCommonTest.openHyperlink(lessonName);
+  await createLesson.addTeacher(LESSON_NAME.teacherOneTimeIndividual);
+  await createLesson.addStudent("[E2E] Kim Ngan Student RgXVzA");
+  await createLesson.checkStudentSessionInfo("Student Sessions(1)");
+  await createLesson.checkLessonTeacher("Lesson Teachers(1)");
+  await lsCommonTest.redirectToTab("Report"); // check report info
+  await createLesson.checkLessonReportInfo("Teaching MethodIndividual");
+  await createLesson.checkLessonReportInfo("Lesson Report StatusDraft");
+
+  await page.goto(url);
+  const lessonAssigneddAfter = (await createLesson.getLessonAllocatedAfter()) as string;
+  const lessonAssigned = await createLesson.increaseAssignedLesson1(assignedLessonBefore ?? "", lessonAssigneddAfter);
+
+  console.log(lessonAssigned, lessonCodeInfo);
 });
 
-test('Create one time group lesson with student and teacher', async ({ page }) => {
-    const createLessonAllocation = new CreateLessonAllocation(page);
-    const lessonAllocationName = await createLessonAllocation.createLessonAllocation(); // create LA
-    const createLesson = new CreateLesson(page);
-    const grouplLessonName = await createLesson.createLesson('oneTimeGroup'); // create one-time group lesson
-    const lsCommonTest = new LsCommonTest(page);
-    const boLesson = new BOLesson(page);
+test("Create one time group lesson with student and teacher", async ({ page }) => {
+  const createLessonAllocation = new CreateLessonAllocation(page);
+  const { assignedLessonBefore, url } = await createLessonAllocation.openLADetail("783"); // create LA
+  const createLesson = new CreateLesson(page);
+  const { lessonName, lessonCode, lessonDate } = await createLesson.createLesson("oneTimeGroup"); // create one-time group lesson
+  const lsCommonTest = new LsCommonTest(page);
 
-    await lsCommonTest.searchList(grouplLessonName); // open lesson detail
-    await lsCommonTest.openHyperlink(grouplLessonName);
-    await createLesson.addTeacher(LESSON_NAME.teacherOneTimeGroup); // add student
-    await createLesson.addStudent(lessonAllocationName); // add teacher
-    await createLesson.checkStudentSessionInfo('Student Sessions(1)');
-    await createLesson.checkLessonTeacher('Lesson Teachers(1)');
-    await lsCommonTest.redirectToTab('Report'); // check report info
-    await createLesson.checkLessonReportInfo('Teaching MethodGroup');
-    await createLesson.checkLessonReportInfo('Lesson Report StatusDraft');
-    await lsCommonTest.redirectToTab('Participants'); // check LA info
-    await loginBO(page, 'full'); // login BO
-    await boLesson.searchStudent(lessonAllocationName); // check lesson info on BO
-    await boLesson.openLessonDetail();
-    await createLesson.checkLessonInfo(grouplLessonName, 'oneTimeGroup');
-    await lsCommonTest.redirectToTab ('Student');
-    await lsCommonTest.redirectToTab ('Report');
+  await lsCommonTest.searchList(lessonName); // open lesson detail
+  const lessonCodeInfo = await createLesson.checkLessonCode("oneTime", lessonCode);
+  await lsCommonTest.openHyperlink(lessonName);
+  await createLesson.addTeacher(LESSON_NAME.teacherOneTimeGroup);
+  await createLesson.addStudent("[E2E] Kim Ngan Student RgXVzA");
+  await createLesson.checkStudentSessionInfo("Student Sessions(1)");
+  await createLesson.checkLessonTeacher("Lesson Teachers(1)");
+  await lsCommonTest.redirectToTab("Report"); // check report info
+  await createLesson.checkLessonReportInfo("Teaching MethodGroup");
+  await createLesson.checkLessonReportInfo("Lesson Report StatusDraft");
+
+  await page.goto(url);
+  const lessonAssigneddAfter = (await createLesson.getLessonAllocatedAfter()) as string;
+  const lessonAssigned = await createLesson.increaseAssignedLesson1(assignedLessonBefore ?? "", lessonAssigneddAfter);
+
+  console.log(lessonAssigned, lessonCodeInfo);
 });

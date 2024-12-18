@@ -2,28 +2,25 @@ import { test } from "../../playwright/fixtures";
 import { BOLesson } from "../pages/bo-lesson";
 import { LsCommonTest } from "../pages/common-test";
 import { CreateLesson } from "../pages/create-lesson";
-import { CreateLessonAllocation } from "../pages/create-lesson-allocation";
 import { EditLesson } from "../pages/edit-lesson";
 import { MessageLesson } from "../pages/message";
 import { loginBO } from "../sf-login-page";
 import { LESSON_NAME } from "../utils/masterData";
 
 test("Change lesson status", async ({ page }) => {
-  const createLessonAllocation = new CreateLessonAllocation(page);
-  const lessonAllocationName = await createLessonAllocation.createLessonAllocation();
   const createLesson = new CreateLesson(page);
-  const groupLessonName = await createLesson.createLesson("recurringGroup");
+  const { lessonName, lessonCode, lessonDate } = await createLesson.createLesson("recurringGroup");
   const lsCommonTest = new LsCommonTest(page);
   const editLesson = new EditLesson(page);
   const showMessage = new MessageLesson(page);
   const boLesson = new BOLesson(page);
 
-  await lsCommonTest.searchList(groupLessonName);
-  await lsCommonTest.openRecurringLesson(groupLessonName);
+  await lsCommonTest.searchList(lessonName);
+  await lsCommonTest.openHyperlink(lessonName);
   await editLesson.updateLessonStatus("draftToPublished");
   await showMessage.changeLessonStatus();
   await createLesson.addTeacher(LESSON_NAME.teacherRecurringGroup, { save: true, scope: "following" });
-  await createLesson.addStudent(lessonAllocationName, { save: true, scope: "following" });
+  await createLesson.addStudent("[E2E] Kim Ngan Student RgXVzA", { save: true, scope: "following" });
   await editLesson.updateAttendanceInfo("attend");
   await editLesson.updateLessonStatus("publishedToCompleted");
   await showMessage.changeLessonStatus();
@@ -41,29 +38,27 @@ test("Change lesson status", async ({ page }) => {
   await showMessage.changeLessonStatus();
   await createLesson.checkLessonScheduleInfo("Cancelled");
   await loginBO(page, "full"); // login BO
-  await boLesson.searchStudent(lessonAllocationName);
-  await page.getByText("Cancelled").click();
+  await boLesson.filterLessonBO({ option: "teacher", lessonType: "recurringGroup" });
+  await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Cancelled" });
+  await page.getByText("Cancelled").first().click();
 });
 
 test("Bulk update lesson status to Completed", async ({ page }) => {
-  const createLessonAllocation = new CreateLessonAllocation(page);
-  const lessonAllocationName = await createLessonAllocation.createLessonAllocation();
   const createLesson = new CreateLesson(page);
-  const groupLessonName = await createLesson.createLesson("recurringGroup");
+  const { lessonName, lessonCode, lessonDate } = await createLesson.createLesson("recurringGroup");
   const lsCommonTest = new LsCommonTest(page);
   const editLesson = new EditLesson(page);
   const showMessage = new MessageLesson(page);
-  const boLesson = new BOLesson(page);
 
   await page.waitForSelector(".toastContent", { state: "hidden" });
-  await lsCommonTest.searchList(groupLessonName);
-  await lsCommonTest.openRecurringLesson(groupLessonName);
+  await lsCommonTest.searchList(lessonName);
+  await lsCommonTest.openHyperlink(lessonName);
   await editLesson.updateLessonStatus("draftToPublished");
-  await createLesson.addTeacher(LESSON_NAME.teacherRecurringGroup, {
+  await createLesson.addTeacher(LESSON_NAME.teacherRecurringIndividual, {
     save: true,
     scope: "following",
   });
-  await createLesson.addStudent("Kim Ngan", { save: true, scope: "following" });
+  await createLesson.addStudent("[E2E] Kim Ngan Student RgXVzA", { save: true, scope: "following" });
   await editLesson.updateAttendanceInfo("attend");
   await lsCommonTest.openHyperlink("Lessons");
   await lsCommonTest.selectItemLessonList("singleSelect");
@@ -75,21 +70,19 @@ test("Bulk update lesson status to Completed", async ({ page }) => {
   await editLesson.bulkUpdateLessonStatus("--None--", "Published");
   await showMessage.bulkUpdateLessonStatus();
   await editLesson.checkLessonStatus("Published");
-  await loginBO(page, "full");
-  await boLesson.searchStudent(lessonAllocationName);
-  await page.getByText("Published").click();
 });
 
 test("Bulk update lesson status to Cancelled", async ({ page }) => {
   const createLesson = new CreateLesson(page);
-  const groupLessonName = await createLesson.createLesson("recurringGroup");
+  const { lessonName, lessonCode, lessonDate } = await createLesson.createLesson("recurringGroup");
   const lsCommonTest = new LsCommonTest(page);
   const editLesson = new EditLesson(page);
   const showMessage = new MessageLesson(page);
+  const boLesson = new BOLesson(page);
 
   await page.waitForSelector(".toastContent", { state: "hidden" });
-  await lsCommonTest.searchList(groupLessonName);
-  await lsCommonTest.openRecurringLesson(groupLessonName);
+  await lsCommonTest.searchList(lessonName);
+  await lsCommonTest.openHyperlink(lessonName);
   await editLesson.updateCancellationReason();
   await lsCommonTest.openHyperlink("Lessons");
   await lsCommonTest.selectItemLessonList("selectAll");

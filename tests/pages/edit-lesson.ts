@@ -1,5 +1,5 @@
 import { expect, Page } from "@playwright/test";
-import { randomText } from "../utils/random";
+import { randomNumber, randomText } from "../utils/random";
 import { LsCommonTest } from "./common-test";
 import { LsPopup } from "./lesson-popup";
 import { MASTER_NAME, LESSON_NAME } from "../utils/masterData";
@@ -13,27 +13,28 @@ export class EditLesson {
     this.page = page;
   }
   public async editLesson(
-    lessonType: "oneTimeIndividual" | "recurringGroup",
+    lessonType: "oneTime" | "recurring",
     option?: "only" | "following"
-  ): Promise<void> {
+  ): Promise<{ newLessonCode: string }> {
     const lsCommonTest = new LsCommonTest(this.page);
     const lessonDialog = new LsPopup(this.page);
+    const newLessonCode = randomNumber();
+    const nextLessonDate = await lessonDialog.getNextLessonDate();
 
+    await this.page.waitForLoadState("domcontentloaded");
     await lsCommonTest.clickOnExactButton("Edit");
 
-    await lessonDialog.getNextLessonDate("*Date");
+    await lessonDialog.inputData("*Date", nextLessonDate);
     await lessonDialog.inputData("*Lesson Name", "updated");
     await lessonDialog.inputData("* Start Time", LESSON_NAME.newStartTime);
     await lessonDialog.inputData("* End Time", LESSON_NAME.newEndTime);
     await lessonDialog.selectData("Teaching Medium", "Online");
-    await lessonDialog.searchAndSelectData(
-      "Search for classroom",
-      LESSON_NAME.newClassroom
-    );
+    await lessonDialog.searchAndSelectData("Search for classroom", LESSON_NAME.newClassroom);
+    await lessonDialog.inputDataTextBox("Lesson Code", newLessonCode);
 
     // Handle options for recurring lessons
     // await this.page.pause();
-    if (lessonType === "recurringGroup" && option) {
+    if (lessonType === "recurring" && option) {
       if (option === "only") {
         await lsCommonTest.clickOnExactButton("Save");
         await lsCommonTest.clickOnExactButton("Save");
@@ -51,18 +52,16 @@ export class EditLesson {
       // Save for one-time lessons or default case
       await lsCommonTest.clickOnExactButton("Save");
     }
+
+    return { newLessonCode };
   }
 
   public async updateCancellationReason() {
     const lsCommonTest = new LsCommonTest(this.page);
     const lessonDialog = new LsPopup(this.page);
 
-    await this.page.pause();
     await lsCommonTest.clickOnExactButton("Edit");
-    await lsCommonTest.selectDropdownList(
-      "Cancellation Reason",
-      "Acts of nature"
-    );
+    await lsCommonTest.selectDropdownList("Cancellation Reason", "Acts of nature");
     const modal = await lsCommonTest.clickOnExactButton("Save");
     await this.page
       .locator("label")
@@ -75,10 +74,7 @@ export class EditLesson {
 
   public async checkLessonInfoSF() {
     const viewNextDate = await this.getNextLessonDate();
-    await this.page
-      .locator("lightning-formatted-text")
-      .filter({ hasText: "updated" })
-      .click();
+    await this.page.locator("lightning-formatted-text").filter({ hasText: "updated" }).click();
     await this.page
       .locator("lightning-formatted-text")
       .filter({ hasText: `${viewNextDate}, ${LESSON_NAME.newStartTime}` })
@@ -87,19 +83,12 @@ export class EditLesson {
       .locator("lightning-formatted-text")
       .filter({ hasText: `${viewNextDate}, ${LESSON_NAME.newEndTime}` })
       .click();
-    await this.page
-      .locator("lightning-formatted-text")
-      .filter({ hasText: "Online" })
-      .click();
+    await this.page.locator("lightning-formatted-text").filter({ hasText: "Online" }).click();
   }
 
   // Check lesson info on BO after editing
   public async checkLessonInfoBO(
-    lessonType:
-      | "oneTimeIndividual"
-      | "oneTimeGroup"
-      | "recurringIndividual"
-      | "recurringGroup"
+    lessonType: "oneTimeIndividual" | "oneTimeGroup" | "recurringIndividual" | "recurringGroup"
   ) {
     const boLesson = new BOLesson(this.page);
     const lessonDate = await boLesson.getNextLessonDateLink("nextLessonDate");
@@ -108,14 +97,12 @@ export class EditLesson {
 
     await this.page.getByText(`Draft${lessonDate}`).click();
     await this.page.getByText(`Lesson Date${lessonDate}`).click();
-    await this.page.getByText(LESSON_NAME.newStartTime).click();
-    await this.page.getByText(LESSON_NAME.newEndTime).click();
+    await this.page.getByText(LESSON_NAME.newStartTimeBO).click();
+    await this.page.getByText(LESSON_NAME.newEndTimeBO).click();
     await this.page.getByText("Teaching MediumOnline").click();
     await this.page.getByText("Lesson Nameupdated").click();
     await this.page.getByText("Location[E2E] Brand A - Center").click();
-    await this.page
-      .getByText(`${MASTER_NAME.classroomName}, ${LESSON_NAME.newClassroom}`)
-      .click();
+    await this.page.getByText(`${MASTER_NAME.classroomName}, ${LESSON_NAME.newClassroom}`).click();
     await this.page.getByText("Lesson Capacity20").click();
     switch (lessonType) {
       case "oneTimeIndividual":
@@ -123,11 +110,15 @@ export class EditLesson {
         await this.page.getByText("Saving OptionOne Time").click();
         break;
 
+      case "recurringIndividual":
+        await this.page.getByText("Teaching MethodIndividual").click();
+        await this.page.getByText("Saving OptionWeekly Recurring").click();
+        await this.page.getByText(`End Date${endDate}`).click();
+        break;
+
       case "recurringGroup":
         await this.page.getByText("Teaching MethodGroup").click();
-        await this.page
-          .getByText(`Course${MASTER_NAME.courseMasterName}`)
-          .click(); // bug
+        await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click();
         await this.page.getByText(`Class${MASTER_NAME.className}`).click();
         await this.page.getByText("Saving OptionWeekly Recurring").click();
         await this.page.getByText(`End Date${endDate}`).click();
@@ -135,6 +126,26 @@ export class EditLesson {
     }
   }
 
+  public async checkLessonCodeBO(lessonType: "oneTime" | "recurring", lessonCode: string): Promise<boolean> {
+    try {
+      if (lessonType === "oneTime") {
+        await this.page.getByText(lessonCode, { exact: true }).click();
+      } else if (lessonType === "recurring") {
+        for (let i = 0; i < 5; i++) {
+          const modifiedLessonCode = (Number(lessonCode) + i).toString();
+          // if false return false now
+          try {
+            await this.page.getByText(modifiedLessonCode, { exact: true }).click();
+          } catch {
+            return false;
+          }
+        }
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }
   public async getNextLessonDate() {
     const date = new Date();
     date.setDate(date.getDate() + 1);
@@ -149,18 +160,11 @@ export class EditLesson {
   }
 
   // Remove a student from a lesson
-  public async removeStudent(options?: {
-    save?: boolean;
-    scope?: "following";
-  }): Promise<void> {
+  public async removeStudent(options?: { save?: boolean; scope?: "following" }): Promise<void> {
     const lsCommonTest = new LsCommonTest(this.page);
 
     await this.page.waitForTimeout(3000);
-    await this.page
-      .getByRole("columnheader", { name: "Choose a Row Select All" })
-      .locator("span")
-      .nth(2)
-      .click();
+    await this.page.getByRole("columnheader", { name: "Choose a Row Select All" }).locator("span").nth(2).click();
     await lsCommonTest.clickOnExactButton("Remove Students");
 
     // Step 4: Select "This and the following lessons" if required
@@ -181,10 +185,7 @@ export class EditLesson {
   }
 
   // Remove a teacher from a lesson
-  public async removeTeacher(options?: {
-    save?: boolean;
-    scope?: "following";
-  }): Promise<void> {
+  public async removeTeacher(options?: { save?: boolean; scope?: "following" }): Promise<void> {
     const lsCommonTest = new LsCommonTest(this.page);
 
     await lsCommonTest.showActionAndClickItem("Delete");
@@ -221,59 +222,38 @@ export class EditLesson {
     switch (lessonStatus) {
       case "draftToPublished":
         await this.page.getByTitle("Published", { exact: true }).click();
-        await this.page
-          .locator("button")
-          .filter({ hasText: "Mark as Current Status" })
-          .click();
+        await this.page.locator("button").filter({ hasText: "Mark as Current Status" }).click();
         break;
 
       case "draftToCancelled":
         await this.page.getByTitle("Cancelled").click();
-        await this.page
-          .locator("button")
-          .filter({ hasText: "Mark as Current Status" })
-          .click();
+        await this.page.locator("button").filter({ hasText: "Mark as Current Status" }).click();
         break;
 
       case "publishedToCompleted":
         await this.page.getByTitle("Completed").click();
-        await this.page
-          .locator("button")
-          .filter({ hasText: "Mark as Current Status" })
-          .click();
+        await this.page.locator("button").filter({ hasText: "Mark as Current Status" }).click();
         break;
 
       case "publishedToCancelled":
         await this.page.getByTitle("Cancelled").click();
-        await this.page
-          .locator("button")
-          .filter({ hasText: "Mark as Current Status" })
-          .click();
+        await this.page.locator("button").filter({ hasText: "Mark as Current Status" }).click();
         await this.page.waitForTimeout(3000);
         break;
 
       case "publishedToDraft":
         await this.page.getByText("stage completeDraft").click();
-        await this.page
-          .locator("button")
-          .filter({ hasText: "Mark as Current Status" })
-          .click();
+        await this.page.locator("button").filter({ hasText: "Mark as Current Status" }).click();
         break;
 
       case "completedToPublished":
         await this.page.getByText("stage completePublished").click();
-        await this.page
-          .locator("button")
-          .filter({ hasText: "Mark as Current Status" })
-          .click();
+        await this.page.locator("button").filter({ hasText: "Mark as Current Status" }).click();
         break;
 
       case "cancelledToDraft":
         await this.page.getByText("stage completeDraft").click();
-        await this.page
-          .locator("button")
-          .filter({ hasText: "Mark as Current Status" })
-          .click();
+        await this.page.locator("button").filter({ hasText: "Mark as Current Status" }).click();
         break;
     }
   }
@@ -306,9 +286,7 @@ export class EditLesson {
   }
 
   // Update attendance info on SF
-  public async updateAttendanceInfo(
-    attendanceStatus: "attend" | "absent" | "late"
-  ) {
+  public async updateAttendanceInfo(attendanceStatus: "attend" | "absent" | "late") {
     const lsCommonTest = new LsCommonTest(this.page);
 
     await this.page
@@ -318,10 +296,7 @@ export class EditLesson {
       .click();
     await this.page.getByRole("menuitem", { name: "Edit" }).click();
     await lsCommonTest.selectDropdownList("Attendance Notice", "In Advance");
-    await lsCommonTest.selectDropdownList(
-      "Attendance Reason",
-      "Family Reasons"
-    );
+    await lsCommonTest.selectDropdownList("Attendance Reason", "Family Reasons");
     await lsCommonTest.inputDataByLabel("Attendance Note", "Attendance Note");
 
     switch (attendanceStatus) {
@@ -334,10 +309,7 @@ export class EditLesson {
         break;
 
       case "late":
-        await lsCommonTest.selectDropdownList(
-          "Attendance Status",
-          "Late, Leave Early"
-        );
+        await lsCommonTest.selectDropdownList("Attendance Status", "Late, Leave Early");
         break;
     }
 

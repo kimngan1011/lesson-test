@@ -10,6 +10,10 @@ export class LsCommonTest {
     await this.page.goto(url, { timeout: 15000 });
   }
 
+  public async pinList() {
+    await this.page.getByRole("button", { name: "Pin this list view." }).click();
+  }
+
   // Click on button
   public async clickOnButton(btnName: string) {
     await this.page.getByText(btnName, { exact: true }).waitFor({ state: "visible", timeout: 15000 });
@@ -31,6 +35,7 @@ export class LsCommonTest {
 
   // Search a list and open detail
   public async searchList(value) {
+    await this.page.waitForSelector(".toastContent", { state: "hidden" });
     await this.page.getByPlaceholder("Search this list...").click();
     await this.page.getByPlaceholder("Search this list...").fill(value);
     await this.page.getByPlaceholder("Search this list...").press("Enter");
@@ -38,7 +43,7 @@ export class LsCommonTest {
 
   // Open hyperlink
   public async openHyperlink(value: string) {
-    await this.page.getByRole("link", { name: value, exact: true }).click();
+    await this.page.getByRole("link", { name: value, exact: true }).first().click();
   }
 
   public async openRecurringLesson(lessonName: string) {
@@ -56,7 +61,7 @@ export class LsCommonTest {
   // Redirect to a tab
   public async redirectToTab(tabName: string) {
     await this.page.getByRole("tab", { name: tabName }).click();
-    await this.page.waitForTimeout(5000);
+    await this.page.waitForTimeout(2000);
   }
 
   // Select item student and teacher
@@ -125,7 +130,7 @@ export class LsCommonTest {
       //   .scrollIntoViewIfNeeded();
       await this.page.getByRole("cell", { name: "Select 5 items" }).locator("span").first().click();
     } else if (actionType === "singleSelect") {
-      await this.page.getByRole("gridcell", { name: "Select item 5" }).locator("div span").click();
+      await this.page.getByRole("gridcell", { name: "Select item 1" }).locator("div span").click();
     }
   }
 }

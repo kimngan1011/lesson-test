@@ -15,6 +15,7 @@ export class BOLesson {
     await this.page.getByPlaceholder("Enter Student Name").click({ timeout: 5000 });
     await this.page.getByPlaceholder("Enter Student Name").fill(value);
     await this.page.getByPlaceholder("Enter Student Name").press("Enter");
+    await this.page.getByText("1", { exact: true }).click();
   }
 
   // Filter lesson on BO
@@ -63,14 +64,25 @@ export class BOLesson {
         const fromDate = await boLesson.getNextLessonDateLink("nextLessonDate");
         const toDate = await boLesson.getEndDate();
 
-        await this.page
-          .getByTestId("FilterLessonList__fromDate")
-          .getByTestId("MDatePickerHF__input")
-          .fill(fromDate as string);
-        await this.page
-          .getByTestId("FilterLessonList__toDate")
-          .getByTestId("MDatePickerHF__input")
-          .fill(toDate as string);
+        if (lessonType === "oneTimeIndividual") {
+          await this.page
+            .getByTestId("FilterLessonList__fromDate")
+            .getByTestId("MDatePickerHF__input")
+            .fill(fromDate as string);
+          await this.page
+            .getByTestId("FilterLessonList__toDate")
+            .getByTestId("MDatePickerHF__input")
+            .fill(fromDate as string);
+        } else if (lessonType === "recurringGroup") {
+          await this.page
+            .getByTestId("FilterLessonList__fromDate")
+            .getByTestId("MDatePickerHF__input")
+            .fill(fromDate as string);
+          await this.page
+            .getByTestId("FilterLessonList__toDate")
+            .getByTestId("MDatePickerHF__input")
+            .fill(toDate as string);
+        }
         break;
 
       case "lessonStatus":

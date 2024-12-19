@@ -70,11 +70,16 @@ export class LsPopup {
   }
 
   // Recurring Setting
-  public async getRecurringSetting(recurringType: "endDate" | "courseSchedule") {
-    await this.page.locator("lightning-primitive-input-checkbox span").nth(1).click();
+  public async getRecurringSetting(recurringType: "endDate" | "courseSchedule" | "oneTime") {
+    if (recurringType == "oneTime") {
+      await this.page.locator("lightning-primitive-input-checkbox span").nth(1).click();
+    }
     if (recurringType == "endDate") {
+      await this.page.locator("lightning-primitive-input-checkbox span").nth(1).click();
+      await this.page.locator("label").filter({ hasText: "End Date" }).locator("span").first().click();
       await this.getEndDate("*");
     } else if (recurringType == "courseSchedule") {
+      await this.page.locator("lightning-primitive-input-checkbox span").nth(1).click();
       await this.page.locator("label").filter({ hasText: "Course Schedule" }).locator("span").first().click();
     }
   }

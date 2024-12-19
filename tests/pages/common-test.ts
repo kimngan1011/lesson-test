@@ -39,11 +39,20 @@ export class LsCommonTest {
     await this.page.getByPlaceholder("Search this list...").click();
     await this.page.getByPlaceholder("Search this list...").fill(value);
     await this.page.getByPlaceholder("Search this list...").press("Enter");
+    await this.page.getByRole("gridcell").first().click();
   }
 
   // Open hyperlink
   public async openHyperlink(value: string) {
-    await this.page.getByRole("link", { name: value, exact: true }).first().click();
+    try {
+      await this.page.getByRole("link", { name: value, exact: true }).first().click({ timeout: 5000 });
+    } catch {
+      await this.page
+        .getByRole("rowheader", { name: `${value} Edit` })
+        .getByRole("link")
+        .first()
+        .click();
+    }
   }
 
   public async openRecurringLesson(lessonName: string) {

@@ -36,6 +36,7 @@ test("Remove student and teacher from one-time individual lesson", async ({ page
 
   await loginBO(page, "full");
   await boLesson.searchStudent("[E2E] Kim Ngan Student RgXVzA");
+  await page.screenshot({ path: "playwright/screenshot/remove-student-teacher-1.png" });
 
   console.log(lessonAssigned);
 });
@@ -68,6 +69,7 @@ test("Remove student and teacher from recurring individual lesson with only this
 
   await loginBO(page, "full");
   await boLesson.searchStudent("[E2E] Kim Ngan Student RgXVzA");
+  await page.screenshot({ path: "playwright/screenshot/remove-student-teacher-2.png" });
 
   console.log(lessonAssigned);
 });
@@ -100,6 +102,7 @@ test("Remove student and teacher from recurring group lesson with following less
 
   await loginBO(page, "full");
   await boLesson.searchStudent("[E2E] Kim Ngan Student RgXVzA");
+  await page.screenshot({ path: "playwright/screenshot/remove-student-teacher-3.png" });
 
   console.log(lessonAssigned);
 });

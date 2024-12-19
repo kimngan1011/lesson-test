@@ -17,6 +17,7 @@ test("Edit one time individual lesson on BO", async ({ page }) => {
   await loginBO(page, "partial");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "oneTimeIndividual" });
   await boLesson.publishLessonOnBO();
+  await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();
   await boLesson.editLesson(lessonName, "oneTimeIndividual");
   await showMessage.editLessonBO();
@@ -41,6 +42,7 @@ test("Edit recurring individual lesson with this and the following on BO", async
   await loginBO(page, "partial");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "recurringIndividual" });
   await boLesson.publishLessonOnBO();
+  await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();
   await boLesson.editLesson(lessonName, "recurringGroup", "following");
   await showMessage.editLessonBO();
@@ -65,6 +67,7 @@ test("Edit recurring group lesson with only this lesson on BO", async ({ page })
   await loginBO(page, "partial");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "recurringGroup" });
   await boLesson.publishLessonOnBO();
+  await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();
   await boLesson.editLesson(lessonName, "recurringGroup", "only");
   await showMessage.editLessonBO();
@@ -89,6 +92,7 @@ test("Edit one time group lesson on BO", async ({ page }) => {
   await loginBO(page, "partial");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "oneTimeGroup" });
   await boLesson.publishLessonOnBO();
+  await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();
   await boLesson.editLesson(lessonName, "oneTimeIndividual");
   await showMessage.editLessonBO();

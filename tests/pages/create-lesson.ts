@@ -268,4 +268,48 @@ export class CreateLesson {
     await this.page.locator('a[href*="/lightning/r/MANAERP__Lesson_Schedule__c/"]').click();
     await this.page.getByRole("grid").getByText(value).nth(0).click();
   }
+
+  // Duplicate lesson
+  public async duplicateLesson(
+    lessonType: "oneTimeIndividual" | "recurringGroup",
+    timeout: number = 10000
+  ): Promise<{ newLessonName: string }> {
+    const lsCommonTest = new LsCommonTest(this.page);
+    const lessonDialog = new LsPopup(this.page);
+    const lessonName = randomText(10);
+    const newLessonName = `${lessonName} - Duplicate`;
+    const lessonDate = await lessonDialog.getNextLessonDate();
+    const lessonCode = randomNumber();
+
+    await lsCommonTest.clickOnExactButton("Duplicate");
+
+    await lessonDialog.inputData("*Date", lessonDate);
+    await lessonDialog.inputData("*Lesson Name", newLessonName);
+    await lessonDialog.inputData("* Start Time", LESSON_NAME.newStartTime);
+    await lessonDialog.inputData("* End Time", LESSON_NAME.newEndTime);
+    await lessonDialog.inputDataTextBox("Lesson Code", lessonCode);
+    await lessonDialog.searchAndSelectData("Search for classroom", LESSON_NAME.newClassroom);
+
+    // Handle lesson type-specific actions
+    const lessonTypeActions: Record<string, () => Promise<void>> = {
+      oneTimeIndividual: async () => {
+        await lessonDialog.selectData("Teaching Method", "Individual");
+        await lessonDialog.getRecurringSetting("oneTime");
+      },
+      recurringGroup: async () => {
+        await lessonDialog.selectData("Teaching Method", "Group");
+        await lessonDialog.searchAndSelectData("Search for course", MASTER_NAME.courseMasterName);
+        await lessonDialog.searchAndSelectData("Search for class", MASTER_NAME.className);
+        await lessonDialog.getRecurringSetting("endDate");
+      },
+    };
+
+    if (lessonTypeActions[lessonType]) {
+      await lessonTypeActions[lessonType]();
+    }
+
+    await lsCommonTest.clickOnExactButton("Save");
+
+    return { newLessonName };
+  }
 }

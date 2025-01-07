@@ -117,7 +117,8 @@ export class BOLesson {
   // Get Next Lesson Date
   public async getNextLessonDateLink(format: "nextLessonDate" | "lAEndDate" | "orderStartDate") {
     const date = new Date();
-    date.setDate(date.getDate() + 1);
+    const nextDate = date.getDate() + 1;
+    date.setDate(nextDate);
 
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -363,7 +364,7 @@ export class BOLesson {
 
       case "late":
         await this.page.getByLabel("Late, Leave Early").click({ force: true });
-        await this.page.getByLabel("Physical Reasons").check();
+        await this.page.getByLabel("Unknown").check();
         await this.page.getByRole("button", { name: "Save" }).click();
         await this.page.getByRole("button", { name: "Save" }).click();
         await this.page.getByRole("cell", { name: "Late, Leave Early" }).click();

@@ -68,7 +68,7 @@ export class CreateLesson {
       if (lessonType === "oneTime") {
         await this.page.getByText(lessonCode, { exact: true }).click();
       } else if (lessonType === "recurring") {
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 4; i++) {
           const modifiedLessonCode = (Number(lessonCode) + i).toString();
           // if false return false now
           try {
@@ -213,26 +213,26 @@ export class CreateLesson {
     return assignedLessonAfter;
   }
 
-  public async increaseAssignedLesson1(lessonAssignedBefore: string, lessonAllocatedAfter: string) {
+  public async increaseAssignedLessonOneTime(lessonAssignedBefore: string, lessonAllocatedAfter: string) {
     if (Number(lessonAllocatedAfter) === Number(lessonAssignedBefore || "0") + 1) {
       return true;
     } else return false;
   }
 
-  public async increaseAssignedLesson5(lessonAssignedBefore: string, lessonAllocatedAfter: string) {
-    if (Number(lessonAllocatedAfter) === Number(lessonAssignedBefore || "0") + 5) {
+  public async increaseAssignedLessonRecurring(lessonAssignedBefore: string, lessonAllocatedAfter: string) {
+    if (Number(lessonAllocatedAfter) === Number(lessonAssignedBefore || "0") + 4) {
       return true;
     } else return false;
   }
 
-  public async decreaseAssignedLesson1(lessonAssignedBefore: string, lessonAllocatedAfter: string) {
+  public async decreaseAssignedLessonOneTime(lessonAssignedBefore: string, lessonAllocatedAfter: string) {
     if (Number(lessonAllocatedAfter) === Number(lessonAssignedBefore || "0") - 1) {
       return true;
     } else return false;
   }
 
-  public async decreaseAssignedLesson5(lessonAssignedBefore: string, lessonAllocatedAfter: string) {
-    if (Number(lessonAllocatedAfter) === Number(lessonAssignedBefore || "0") - 5) {
+  public async decreaseAssignedLessonRecurring(lessonAssignedBefore: string, lessonAllocatedAfter: string) {
+    if (Number(lessonAllocatedAfter) === Number(lessonAssignedBefore || "0") - 4) {
       return true;
     } else return false;
   }

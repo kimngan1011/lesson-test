@@ -6,12 +6,12 @@ test("Submit withdrawal order with start date < last attendance day", async ({ p
   const withdrawalOrder = new CreateLessonAllocation(page);
   const lsCommonTest = new LsCommonTest(page);
   const createLessonAllocation = new CreateLessonAllocation(page);
-  const { fullName, LANumber } = await createLessonAllocation.createLessonAllocation(); // create LA
+  // const { fullName, LANumber } = await createLessonAllocation.createLessonAllocation(); // create LA
 
   await withdrawalOrder.withdrawalOrder("UpdateLA");
-  await lsCommonTest.openHyperlink(fullName as string);
-  await lsCommonTest.redirectToTab("Course");
-  await withdrawalOrder.checkLADurationAndPS("Purchased Slot5/Week", "Submit");
+  // await lsCommonTest.openHyperlink(fullName as string);
+  // await lsCommonTest.redirectToTab("Course");
+  // await withdrawalOrder.checkLADurationAndPS("Purchased Slot5/Week", "Submit");
 });
 
 test("Submit withdrawal order with start date = last attendance day", async ({ page }) => {

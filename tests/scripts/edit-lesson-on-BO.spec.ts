@@ -16,11 +16,14 @@ test("Edit one time individual lesson on BO", async ({ page }) => {
 
   await loginBO(page, "partial");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "oneTimeIndividual" });
+  await boLesson.searchStudent("[E2E] Kim Ngan Student f35tFU");
   await boLesson.publishLessonOnBO();
   await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();
   await boLesson.editLesson(lessonName, "oneTimeIndividual");
   await showMessage.editLessonBO();
+  await page.waitForTimeout(2000);
+  await page.screenshot({ path: "playwright/screenshot/edit-one-time-individual-lesson-BO1.1.png" });
   //   await boLesson.checkUpdatedLessonInfo(lessonName, "oneTimeIndividual");
   await boLesson.collectAttendanceOnBO("attend");
   await showMessage.collectAttendaneBO();
@@ -30,6 +33,7 @@ test("Edit one time individual lesson on BO", async ({ page }) => {
   await lsCommonTest.openHyperlink(lessonName);
   await boLesson.checkAttendAndLate("Attend");
   await checkLCInfo.checkLessonScheduleInfo("Published");
+  await page.screenshot({ path: "playwright/screenshot/edit-one-time-individual-lesson-BO1.2.png" });
 });
 
 test("Edit recurring individual lesson with this and the following on BO", async ({ page }) => {
@@ -41,11 +45,14 @@ test("Edit recurring individual lesson with this and the following on BO", async
 
   await loginBO(page, "partial");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "recurringIndividual" });
+  await boLesson.searchStudent("[E2E] Kim Ngan Student f35tFU");
   await boLesson.publishLessonOnBO();
   await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();
   await boLesson.editLesson(lessonName, "recurringGroup", "following");
   await showMessage.editLessonBO();
+  await page.waitForTimeout(2000);
+  await page.screenshot({ path: "playwright/screenshot/edit-recurring-individual-lesson-BO1.1.png" });
   //   await boLesson.checkUpdatedLessonInfo(lessonName, "recurringIndividual");
   await boLesson.collectAttendanceOnBO("late");
   await showMessage.collectAttendaneBO();
@@ -55,6 +62,7 @@ test("Edit recurring individual lesson with this and the following on BO", async
   await lsCommonTest.openHyperlink(lessonName);
   await boLesson.checkAttendAndLate("Late");
   await checkLCInfo.checkLessonScheduleInfo("Published");
+  await page.screenshot({ path: "playwright/screenshot/edit-recurring-individual-lesson-BO1.2.png" });
 });
 
 test("Edit recurring group lesson with only this lesson on BO", async ({ page }) => {
@@ -66,11 +74,14 @@ test("Edit recurring group lesson with only this lesson on BO", async ({ page })
 
   await loginBO(page, "partial");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "recurringGroup" });
+  await boLesson.searchStudent("[E2E] Kim Ngan Student f35tFU");
   await boLesson.publishLessonOnBO();
   await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();
   await boLesson.editLesson(lessonName, "recurringGroup", "only");
   await showMessage.editLessonBO();
+  await page.waitForTimeout(2000);
+  await page.screenshot({ path: "playwright/screenshot/edit-recurring-group-lesson-BO1.1.png" });
   //   await boLesson.checkUpdatedLessonInfo(lessonName, "recurringGroup");
   await boLesson.collectAttendanceOnBO("absent");
   await showMessage.collectAttendaneBO();
@@ -80,6 +91,7 @@ test("Edit recurring group lesson with only this lesson on BO", async ({ page })
   await lsCommonTest.openHyperlink(lessonName);
   await boLesson.checkAbsent("Absent", "Family Reasons", "On The Day");
   await checkLCInfo.checkLessonScheduleInfo("Published");
+  await page.screenshot({ path: "playwright/screenshot/edit-recurring-group-lesson-BO1.2.png" });
 });
 
 test("Edit one time group lesson on BO", async ({ page }) => {
@@ -91,11 +103,14 @@ test("Edit one time group lesson on BO", async ({ page }) => {
 
   await loginBO(page, "partial");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "oneTimeGroup" });
+  await boLesson.searchStudent("[E2E] Kim Ngan Student f35tFU");
   await boLesson.publishLessonOnBO();
   await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();
   await boLesson.editLesson(lessonName, "oneTimeIndividual");
   await showMessage.editLessonBO();
+  await page.waitForTimeout(2000);
+  await page.screenshot({ path: "playwright/screenshot/edit-one-time-group-lesson-BO1.1.png" });
   //   await boLesson.checkUpdatedLessonInfo(lessonName, "oneTimeGroup");
   await boLesson.collectAttendanceOnBO("allAttend");
   await showMessage.collectAttendaneBO();
@@ -105,4 +120,5 @@ test("Edit one time group lesson on BO", async ({ page }) => {
   await lsCommonTest.openHyperlink(lessonName);
   await boLesson.checkAttendAndLate("Attend");
   await checkLCInfo.checkLessonScheduleInfo("Published");
+  await page.screenshot({ path: "playwright/screenshot/edit-one-time-group-lesson-BO1.2.png" });
 });

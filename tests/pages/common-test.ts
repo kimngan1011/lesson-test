@@ -110,7 +110,7 @@ export class LsCommonTest {
   public async openLCDetail() {
     await this.page.keyboard.press("PageDown");
     await this.page.locator('a[href*="/lightning/r/MANAERP__Lesson_Schedule__c/"]').click();
-    await this.page.waitForTimeout(5000);
+    await this.page.waitForTimeout(2000);
   }
 
   // Select data in dropdown list
@@ -132,14 +132,13 @@ export class LsCommonTest {
 
   public async selectItemLessonList(actionType: "selectAll" | "singleSelect") {
     if (actionType === "selectAll") {
-      // await this.page
-      //   .getByRole("cell", { name: "Select 5 items" })
-      //   .locator("span")
-      //   .first()
-      //   .scrollIntoViewIfNeeded();
-      await this.page.getByRole("cell", { name: "Select 5 items" }).locator("span").first().click();
+      try {
+        await this.page.getByRole("cell", { name: "Select 4 items" }).locator("span").first().click({ timeout: 5000 });
+      } catch {
+        await this.page.getByRole("cell", { name: "Select 3 items" }).locator("span").first().click();
+      }
     } else if (actionType === "singleSelect") {
-      await this.page.getByRole("gridcell", { name: "Select item 1" }).locator("div span").click();
+      await this.page.getByRole("gridcell", { name: "Select item 1", exact: true }).locator("div span").click();
     }
   }
 }

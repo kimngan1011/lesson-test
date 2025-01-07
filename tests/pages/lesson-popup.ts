@@ -35,7 +35,8 @@ export class LsPopup {
 
   public async getNextLessonDate() {
     const currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() + 1);
+    const nextDate = currentDate.getDate() + 1;
+    currentDate.setDate(nextDate);
     const formatOptions = {
       day: "numeric",
       month: "short",
@@ -43,6 +44,7 @@ export class LsPopup {
     } as any;
     const nextLessonDate = currentDate.toLocaleDateString("en-GB", formatOptions);
 
+    console.log(currentDate);
     return nextLessonDate;
   }
 

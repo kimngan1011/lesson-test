@@ -131,7 +131,7 @@ export class EditLesson {
       if (lessonType === "oneTime") {
         await this.page.getByText(lessonCode, { exact: true }).click();
       } else if (lessonType === "recurring") {
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 3; i++) {
           const modifiedLessonCode = (Number(lessonCode) + i).toString();
           // if false return false now
           try {
@@ -281,7 +281,7 @@ export class EditLesson {
     await this.page
       .getByLabel("Recently Viewed|Lessons|List")
       .getByText(lessonStatusInfo, { exact: true })
-      .nth(4)
+      .nth(3)
       .click();
   }
 

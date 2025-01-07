@@ -7,16 +7,12 @@ export class MessageLesson {
 
   // Edit and publish lesson on BO
   public async editLessonBO() {
-    await this.page
-      .getByText("You have updated the lesson successfully")
-      .click();
+    await this.page.getByText("You have updated the lesson successfully").click();
   }
 
   // Collect attendance on BO
   public async collectAttendaneBO() {
-    await this.page
-      .getByText("You have collected the attendance successfully")
-      .click();
+    await this.page.getByText("You have collected the attendance successfully").click();
   }
 
   // Remove student on BO
@@ -42,5 +38,10 @@ export class MessageLesson {
   // Bulk update lesson status
   public async bulkUpdateLessonStatus() {
     await this.page.getByText("Update lesson status successfully").click();
+  }
+
+  // Duplicate lesson
+  public async duplicateLesson() {
+    await this.page.getByText("You have duplicated lesson successfully").click();
   }
 }

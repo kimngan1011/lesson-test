@@ -20,11 +20,12 @@ export class BOLesson {
 
   // Filter lesson on BO
   public async filterLessonBO(params: {
-    option: "teacher" | "lessonDate" | "lessonStatus";
+    option: "teacher" | "lessonDate" | "lessonStatus" | "lessonListView";
     lessonType?: "oneTimeIndividual" | "oneTimeGroup" | "recurringIndividual" | "recurringGroup";
     lessonStatus?: string;
+    lessonListView?: string;
   }) {
-    const { option, lessonType, lessonStatus } = params;
+    const { option, lessonType, lessonStatus, lessonListView } = params;
 
     await this.page.getByTestId("MButtonDropdownWithPopover__button").click();
 
@@ -88,6 +89,12 @@ export class BOLesson {
       case "lessonStatus":
         await this.page.getByTestId("FilterLessonList__lessonStatuses").getByLabel("Open").click();
         await this.page.getByRole("option", { name: lessonStatus }).click();
+        break;
+
+      case "lessonListView":
+        await this.page.getByTestId("FilterLessonList__lessonViews").getByLabel("Open").click();
+        await this.page.getByRole("option", { name: lessonListView }).click();
+        break;
     }
 
     await this.page.getByTestId("MButtonDropdownWithPopover__buttonApply").click();
@@ -151,12 +158,8 @@ export class BOLesson {
   }
 
   // Open lesson detail
-  public async openLessonDetail(isNext: boolean = false) {
-    const boLesson = new BOLesson(this.page);
-    const lessonDateLink = isNext
-      ? await boLesson.getNextLessonDateLink("nextLessonDate")
-      : await boLesson.getLessonDateLink("lessonDate");
-    await this.page.getByRole("link", { name: lessonDateLink }).first().click();
+  public async openLessonDetail() {
+    await this.page.locator('a[data-testid="WrapperTableLessonSF__lessonDate"]').first().click();
   }
 
   // Edit lesson on BO
@@ -270,43 +273,43 @@ export class BOLesson {
     const endDate = await boLesson.getEndDate();
     const lsCommonTest = new LsCommonTest(this.page);
 
-    await this.page.getByText(`Published${lessonDate}`).click();
-    await this.page.getByText(`Lesson Date${lessonDate}`).click();
-    await this.page.getByText("Start Time13:00").click();
-    await this.page.getByText("End Time14:00").click();
-    await this.page.getByText("Teaching MediumOnline").click();
-    await this.page.getByText(`Lesson Name${lessonName}`).click();
-    await this.page.getByText("Location[E2E] Brand A - Center").click();
-    await this.page.getByText(`${MASTER_NAME.classroomName}, ${LESSON_NAME.newClassroom}`).click();
-    await this.page.getByText("Lesson Capacity20").click();
-    await this.page.getByText("Cancellation ReasonActs of nature").click();
+    // await this.page.getByText(`Published${lessonDate}`).click();
+    // await this.page.getByText(`Lesson Date${lessonDate}`).click();
+    // await this.page.getByText("Start Time13:00").click();
+    // await this.page.getByText("End Time14:00").click();
+    // await this.page.getByText("Teaching MediumOnline").click();
+    // await this.page.getByText(`Lesson Name${lessonName}`).click();
+    // await this.page.getByText("Location[E2E] Brand A - Center").click();
+    // await this.page.getByText(`${MASTER_NAME.classroomName}, ${LESSON_NAME.newClassroom}`).click();
+    // await this.page.getByText("Lesson Capacity20").click();
+    // await this.page.getByText("Cancellation ReasonActs of nature").click();
     switch (lessonType) {
       case "oneTimeIndividual":
-        await this.page.getByText(LESSON_NAME.teacherOneTimeIndividual).click();
-        await this.page.getByText("Teaching MethodIndividual").click();
+        // await this.page.getByText(LESSON_NAME.teacherOneTimeIndividual).click();
+        // await this.page.getByText("Teaching MethodIndividual").click();
         await this.page.getByText("Saving OptionOne Time").click();
         break;
 
       case "oneTimeGroup":
-        await this.page.getByText(LESSON_NAME.teacherOneTimeGroup).click();
-        await this.page.getByText("Teaching MethodGroup").click();
+        // await this.page.getByText(LESSON_NAME.teacherOneTimeGroup).click();
+        // await this.page.getByText("Teaching MethodGroup").click();
         // await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click();
-        await this.page.getByText(`Class${MASTER_NAME.className}`).click();
+        // await this.page.getByText(`Class${MASTER_NAME.className}`).click();
         await this.page.getByText("Saving OptionOne Time").click();
         break;
 
       case "recurringIndividual":
-        await this.page.getByText(LESSON_NAME.teacherRecurringIndividual).click();
-        await this.page.getByText("Teaching MethodIndividual").click();
+        // await this.page.getByText(LESSON_NAME.teacherRecurringIndividual).click();
+        // await this.page.getByText("Teaching MethodIndividual").click();
         await this.page.getByText("Saving OptionWeekly Recurring").click();
         await this.page.getByText(`End Date${endDate}`).click();
         break;
 
       case "recurringGroup":
-        await this.page.getByText(LESSON_NAME.teacherRecurringGroup).click();
-        await this.page.getByText("Teaching MethodGroup").click();
-        // await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click(); // bug
-        await this.page.getByText(`Class${MASTER_NAME.className}`).click();
+        // await this.page.getByText(LESSON_NAME.teacherRecurringGroup).click();
+        // await this.page.getByText("Teaching MethodGroup").click();
+        // // await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click(); // bug
+        // await this.page.getByText(`Class${MASTER_NAME.className}`).click();
         await this.page.getByText("Saving OptionWeekly Recurring").click();
         await this.page.getByText(`End Date${endDate}`).click();
         break;

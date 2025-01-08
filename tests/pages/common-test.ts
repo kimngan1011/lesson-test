@@ -93,11 +93,7 @@ export class LsCommonTest {
 
   // Show quick action and click menu
   public async showActionAndClickItem(value: string) {
-    await this.page
-      .locator("span")
-      .filter({ hasText: /^Show actions$/ })
-      .first()
-      .click();
+    await this.page.getByRole("button", { name: "Show actions" }).click();
     await this.page.getByRole("menuitem", { name: value }).click();
   }
 
@@ -133,9 +129,9 @@ export class LsCommonTest {
   public async selectItemLessonList(actionType: "selectAll" | "singleSelect") {
     if (actionType === "selectAll") {
       try {
-        await this.page.getByRole("cell", { name: "Select 4 items" }).locator("span").first().click({ timeout: 5000 });
+        await this.page.getByRole("cell", { name: "Select 5 items" }).locator("span").first().click({ timeout: 5000 });
       } catch {
-        await this.page.getByRole("cell", { name: "Select 3 items" }).locator("span").first().click();
+        await this.page.getByRole("cell", { name: "Select 4 items" }).locator("span").first().click();
       }
     } else if (actionType === "singleSelect") {
       await this.page.getByRole("gridcell", { name: "Select item 1", exact: true }).locator("div span").click();

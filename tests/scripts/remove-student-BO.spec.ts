@@ -18,8 +18,8 @@ test("Remove student from one-time individual lesson", async ({ page }) => {
 
   await loginBO(page, "partial");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "oneTimeIndividual" });
-  await boLesson.searchStudent("[E2E] Kim Ngan Student f35tFU");
-  await boLesson.openLessonDetail(true);
+  await boLesson.searchStudent("[E2E] Kim Ngan Student JZh5Zu");
+  await boLesson.openLessonDetail();
   await boLesson.editLessonName(lessonName, "oneTimeIndividual");
   await lsCommonTest.redirectToTab("Student");
   await boLesson.removeStudentOnBO("oneTimeIndividual");
@@ -42,8 +42,8 @@ test("Remove student from recurring lesson with only this lesson", async ({ page
 
   await loginBO(page, "partial");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "recurringIndividual" });
-  await boLesson.searchStudent("[E2E] Kim Ngan Student f35tFU");
-  await boLesson.openLessonDetail(true);
+  await boLesson.searchStudent("[E2E] Kim Ngan Student JZh5Zu");
+  await boLesson.openLessonDetail();
   await boLesson.editLessonName(lessonName, "recurringGroup", "only");
   await lsCommonTest.redirectToTab("Student");
   await boLesson.removeStudentOnBO("recurringGroup", "only");
@@ -65,8 +65,8 @@ test("Remove student from recurring lesson with this and the following lesson", 
 
   await loginBO(page, "partial");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "recurringGroup" });
-  await boLesson.searchStudent("[E2E] Kim Ngan Student f35tFU");
-  await boLesson.openLessonDetail(true);
+  await boLesson.searchStudent("[E2E] Kim Ngan Student JZh5Zu");
+  await boLesson.openLessonDetail();
   await boLesson.editLessonName(lessonName, "recurringGroup", "following");
   await lsCommonTest.redirectToTab("Student");
   await boLesson.removeStudentOnBO("recurringGroup", "following");

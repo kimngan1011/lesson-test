@@ -48,6 +48,21 @@ export class LsPopup {
     return nextLessonDate;
   }
 
+  public async getPastLessonDate() {
+    const currentDate = new Date();
+    const nextDate = currentDate.getDate() - 5;
+    currentDate.setDate(nextDate);
+    const formatOptions = {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    } as any;
+    const nextLessonDate = currentDate.toLocaleDateString("en-GB", formatOptions);
+
+    console.log(currentDate);
+    return nextLessonDate;
+  }
+
   // Input data use label
   public async inputData(fieldName: string, value: string) {
     await this.page.getByLabel(fieldName).click();

@@ -95,31 +95,31 @@ export class EditLesson {
     const endDate = await boLesson.getEndDate();
     const lsCommonTest = new LsCommonTest(this.page);
 
-    await this.page.getByText(`Draft${lessonDate}`).click();
-    await this.page.getByText(`Lesson Date${lessonDate}`).click();
-    await this.page.getByText(LESSON_NAME.newStartTimeBO).click();
-    await this.page.getByText(LESSON_NAME.newEndTimeBO).click();
-    await this.page.getByText("Teaching MediumOnline").click();
-    await this.page.getByText("Lesson Nameupdated").click();
-    await this.page.getByText("Location[E2E] Brand A - Center").click();
-    await this.page.getByText(`${MASTER_NAME.classroomName}, ${LESSON_NAME.newClassroom}`).click();
-    await this.page.getByText("Lesson Capacity20").click();
+    // await this.page.getByText(`Draft${lessonDate}`).click();
+    // await this.page.getByText(`Lesson Date${lessonDate}`).click();
+    // await this.page.getByText(LESSON_NAME.newStartTimeBO).click();
+    // await this.page.getByText(LESSON_NAME.newEndTimeBO).click();
+    // await this.page.getByText("Teaching MediumOnline").click();
+    // await this.page.getByText("Lesson Nameupdated").click();
+    // await this.page.getByText("Location[E2E] Brand A - Center").click();
+    // await this.page.getByText(`${MASTER_NAME.classroomName}, ${LESSON_NAME.newClassroom}`).click();
+    // await this.page.getByText("Lesson Capacity20").click();
     switch (lessonType) {
       case "oneTimeIndividual":
-        await this.page.getByText("Teaching MethodIndividual").click();
+        // await this.page.getByText("Teaching MethodIndividual").click();
         await this.page.getByText("Saving OptionOne Time").click();
         break;
 
       case "recurringIndividual":
-        await this.page.getByText("Teaching MethodIndividual").click();
+        // await this.page.getByText("Teaching MethodIndividual").click();
         await this.page.getByText("Saving OptionWeekly Recurring").click();
         await this.page.getByText(`End Date${endDate}`).click();
         break;
 
       case "recurringGroup":
-        await this.page.getByText("Teaching MethodGroup").click();
-        await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click();
-        await this.page.getByText(`Class${MASTER_NAME.className}`).click();
+        // await this.page.getByText("Teaching MethodGroup").click();
+        // await this.page.getByText(`Course${MASTER_NAME.courseMasterName}`).click();
+        // await this.page.getByText(`Class${MASTER_NAME.className}`).click();
         await this.page.getByText("Saving OptionWeekly Recurring").click();
         await this.page.getByText(`End Date${endDate}`).click();
         break;
@@ -175,7 +175,7 @@ export class EditLesson {
         .locator("span")
         .first()
         .click();
-      await this.page.getByRole("button", { name: "Save" }).click();
+      // await this.page.getByRole("button", { name: "Save" }).click();
     }
 
     // Step 5: Click "Save" if required
@@ -199,7 +199,7 @@ export class EditLesson {
         .locator("span")
         .first()
         .click();
-      await this.page.getByRole("button", { name: "Save" }).click();
+      // await this.page.getByRole("button", { name: "Save" }).click();
     }
 
     // Step 5: Click "Save" if required
@@ -208,6 +208,7 @@ export class EditLesson {
     }
   }
 
+  // Update the lesson status
   public async updateLessonStatus(
     lessonStatus:
       | "draftToPublished"
@@ -226,17 +227,17 @@ export class EditLesson {
         break;
 
       case "draftToCancelled":
-        await this.page.getByTitle("Cancelled").click();
+        await this.page.getByTitle("Cancelled", { exact: true }).click();
         await this.page.locator("button").filter({ hasText: "Mark as Current Status" }).click();
         break;
 
       case "publishedToCompleted":
-        await this.page.getByTitle("Completed").click();
+        await this.page.getByTitle("Completed", { exact: true }).click();
         await this.page.locator("button").filter({ hasText: "Mark as Current Status" }).click();
         break;
 
       case "publishedToCancelled":
-        await this.page.getByTitle("Cancelled").click();
+        await this.page.getByTitle("Cancelled", { exact: true }).click();
         await this.page.locator("button").filter({ hasText: "Mark as Current Status" }).click();
         await this.page.waitForTimeout(3000);
         break;

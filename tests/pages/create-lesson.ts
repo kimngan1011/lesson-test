@@ -15,7 +15,7 @@ export class CreateLesson {
 
   // Create lesson
   public async createLesson(
-    lessonType: "oneTimeIndividual" | "oneTimeGroup" | "recurringGroup" | "recurringIndividual",
+    lessonType: "oneTimeIndividual" | "oneTimeGroup" | "recurringGroup" | "recurringIndividual" | "pastLesson",
     timeout: number = 10000
   ): Promise<{ lessonName: string; lessonCode: string; lessonDate: string }> {
     const lsCommonTest = new LsCommonTest(this.page);
@@ -23,12 +23,12 @@ export class CreateLesson {
     const lessonName = randomText(10);
     const lessonCode = randomNumber();
     const lessonDate = await lessonDialog.getLessonDate();
+    const getPastLessonDate = await lessonDialog.getPastLessonDate();
 
     await lsCommonTest.navigateToPage(LESSON_URL.lesson);
     await lsCommonTest.pinList();
     await lsCommonTest.clickOnExactButton("New");
 
-    await lessonDialog.inputData("*Date", lessonDate);
     await lessonDialog.inputData("*Lesson Name", lessonName);
     await lessonDialog.inputData("* Start Time", LESSON_NAME.startTime);
     await lessonDialog.inputData("* End Time", LESSON_NAME.endTime);
@@ -37,17 +37,28 @@ export class CreateLesson {
     // Handle lesson type-specific actions
     const lessonTypeActions: Record<string, () => Promise<void>> = {
       oneTimeGroup: async () => {
+        await lessonDialog.inputData("*Date", lessonDate);
         await lessonDialog.selectData("Teaching Method", "Group");
         await lessonDialog.searchAndSelectData("Search for course", MASTER_NAME.courseMasterName);
         await lessonDialog.searchAndSelectData("Search for class", MASTER_NAME.className);
       },
+      oneTimeIndividual: async () => {
+        await lessonDialog.inputData("*Date", lessonDate);
+      },
       recurringGroup: async () => {
+        await lessonDialog.inputData("*Date", lessonDate);
         await lessonDialog.selectData("Teaching Method", "Group");
         await lessonDialog.searchAndSelectData("Search for course", MASTER_NAME.courseMasterName);
         await lessonDialog.searchAndSelectData("Search for class", MASTER_NAME.className);
         await lessonDialog.getRecurringSetting("endDate");
       },
       recurringIndividual: async () => {
+        await lessonDialog.inputData("*Date", lessonDate);
+        await lessonDialog.getRecurringSetting("endDate");
+      },
+
+      pastLesson: async () => {
+        await lessonDialog.inputData("*Date", getPastLessonDate);
         await lessonDialog.getRecurringSetting("endDate");
       },
     };
@@ -55,7 +66,6 @@ export class CreateLesson {
     if (lessonTypeActions[lessonType]) {
       await lessonTypeActions[lessonType]();
     }
-
     await lessonDialog.searchAndSelectData("Search for classroom", MASTER_NAME.classroomName);
     await lsCommonTest.clickOnExactButton("Save");
 
@@ -72,7 +82,7 @@ export class CreateLesson {
           const modifiedLessonCode = (Number(lessonCode) + i).toString();
           // if false return false now
           try {
-            await this.page.getByText(modifiedLessonCode, { exact: true }).click();
+            await this.page.getByText(modifiedLessonCode, { exact: true }).click({ timeout: 5000 });
           } catch {
             return false;
           }
@@ -266,7 +276,7 @@ export class CreateLesson {
   public async checkLessonScheduleInfo(value: string) {
     await this.page.keyboard.press("PageDown");
     await this.page.locator('a[href*="/lightning/r/MANAERP__Lesson_Schedule__c/"]').click();
-    await this.page.getByRole("grid").getByText(value).nth(0).click();
+    await this.page.getByRole("grid").getByText(value, { exact: true }).nth(0).click();
   }
 
   // Duplicate lesson

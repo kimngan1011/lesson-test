@@ -1,5 +1,5 @@
-// import { test } from "../../playwright/fixtures";
-// import { CreateLessonAllocation } from "../pages/create-lesson-allocation";
+import { test } from "../../playwright/fixtures";
+import { CreateLessonAllocation } from "../pages/create-lesson-allocation";
 
 // test("Create LA", async ({ page }) => {
 //   const createLessonAllocation = new CreateLessonAllocation(page);

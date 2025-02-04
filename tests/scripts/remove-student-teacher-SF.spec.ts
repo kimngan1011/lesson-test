@@ -20,8 +20,8 @@ import { LESSON_NAME } from "../utils/masterData";
 //   await lsCommonTest.searchList(lessonName);
 //   await lsCommonTest.openHyperlink(lessonName);
 //   await createLesson.addTeacher(LESSON_NAME.teacherOneTimeIndividual);
-//   await createLesson.addStudent("[E2E] Kim Ngan Student JZh5Zu");
-//   const { assignedLessonBefore, url } = await createLessonAllocation.openLADetail("1767");
+//   await createLesson.addStudent("[E2E] Kim Ngan Student 5qta6d");
+//   const { assignedLessonBefore, url } = await createLessonAllocation.openLADetail("5991");
 //   await lsCommonTest.openHyperlink("Lessons");
 //   await lsCommonTest.searchList(lessonName);
 //   await lsCommonTest.openHyperlink(lessonName);
@@ -42,7 +42,7 @@ import { LESSON_NAME } from "../utils/masterData";
 //   );
 
 //   await loginBO(page, "full");
-//   await boLesson.searchStudent("[E2E] Kim Ngan Student JZh5Zu");
+//   await boLesson.searchStudent("[E2E] Kim Ngan Student 5qta6d");
 //   await boLesson.filterLessonBO({ option: "teacher", lessonType: "oneTimeIndividual" });
 //   await boLesson.filterLessonBO({ option: "lessonDate", lessonType: "oneTimeIndividual" });
 //   await page.screenshot({ path: "playwright/screenshot/remove-student-teacher-one-time-individual1.2.png" });
@@ -62,8 +62,8 @@ import { LESSON_NAME } from "../utils/masterData";
 //   await lsCommonTest.searchList(lessonName);
 //   await lsCommonTest.openHyperlink(lessonName);
 //   await createLesson.addTeacher(LESSON_NAME.teacherRecurringIndividual, { save: true, scope: "following" });
-//   await createLesson.addStudent("[E2E] Kim Ngan Student JZh5Zu", { save: true, scope: "following" });
-//   const { assignedLessonBefore, url } = await createLessonAllocation.openLADetail("1767");
+//   await createLesson.addStudent("[E2E] Kim Ngan Student 5qta6d", { save: true, scope: "following" });
+//   const { assignedLessonBefore, url } = await createLessonAllocation.openLADetail("5991");
 //   await lsCommonTest.openHyperlink("Lessons");
 //   await lsCommonTest.searchList(lessonName);
 //   await lsCommonTest.openHyperlink(lessonName);
@@ -84,7 +84,7 @@ import { LESSON_NAME } from "../utils/masterData";
 //   );
 
 //   await loginBO(page, "full");
-//   await boLesson.searchStudent("[E2E] Kim Ngan Student JZh5Zu");
+//   await boLesson.searchStudent("[E2E] Kim Ngan Student 5qta6d");
 //   await page.screenshot({ path: "playwright/screenshot/remove-student-teacher-recurring-individual1.2.png" });
 
 //   console.log(lessonAssigned, lessonName);
@@ -102,8 +102,8 @@ test("Remove student and teacher from recurring group lesson with following less
   await lsCommonTest.searchList(lessonName);
   await lsCommonTest.openHyperlink(lessonName);
   await createLesson.addTeacher(LESSON_NAME.teacherRecurringIndividual, { save: true, scope: "following" });
-  await createLesson.addStudent("[E2E] Kim Ngan Student JZh5Zu", { save: true, scope: "following" });
-  const { assignedLessonBefore, url } = await createLessonAllocation.openLADetail("1767");
+  await createLesson.addStudent("[E2E] Kim Ngan Student 5qta6d", { save: true, scope: "following" });
+  const { assignedLessonBefore, url } = await createLessonAllocation.openLADetail("5991");
   await lsCommonTest.openHyperlink("Lessons");
   await lsCommonTest.searchList(lessonName);
   await lsCommonTest.openHyperlink(lessonName);
@@ -124,7 +124,7 @@ test("Remove student and teacher from recurring group lesson with following less
   );
 
   await loginBO(page, "full");
-  await boLesson.searchStudent("[E2E] Kim Ngan Student JZh5Zu");
+  await boLesson.searchStudent("[E2E] Kim Ngan Student 5qta6d");
   await page.screenshot({ path: "playwright/screenshot/remove-student-teacher-recurring-group1.2.png" });
 
   console.log(lessonAssigned, lessonName);

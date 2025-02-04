@@ -35,7 +35,7 @@ export class LsCommonTest {
 
   // Search a list and open detail
   public async searchList(value) {
-    await this.page.waitForSelector(".toastContent", { state: "hidden" });
+    await this.page.waitForSelector(".toastContent", { state: "visible" });
     await this.page.getByPlaceholder("Search this list...").click();
     await this.page.getByPlaceholder("Search this list...").fill(value);
     await this.page.getByPlaceholder("Search this list...").press("Enter");

@@ -20,5 +20,5 @@ export const LESSON_URL = {
 // };
 
 // export const LESSON_URL = {
-//     lesson: 'https://dev-staging.lightning.force.com/lightning/o/MANAERP__Lesson__c/list?filterName=__Recent',
-// }
+//   lesson: "https://dev-staging.lightning.force.com/lightning/o/MANAERP__Lesson__c/list?filterName=__Recent",
+// };

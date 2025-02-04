@@ -14,13 +14,14 @@ test("Edit, Publish and Collect Attendance = Attend for one time individual less
   const lessonName = randomText(10);
   const checkLCInfo = new CreateLesson(page);
 
-  await loginBO(page, "partial");
+  await loginBO(page, "full");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "oneTimeIndividual" });
-  await boLesson.searchStudent("[E2E] Kim Ngan Student JZh5Zu");
+  await boLesson.searchStudent("[E2E] Kim Ngan Student 5qta6d");
   await boLesson.publishLessonOnBO();
   await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();
   await boLesson.editLesson(lessonName, "oneTimeIndividual");
+  console.log(lessonName);
   await showMessage.editLessonBO();
   await page.waitForTimeout(2000);
   await page.screenshot({ path: "playwright/screenshot/edit-one-time-individual-lesson-BO1.1.png" });
@@ -45,13 +46,13 @@ test("Edit, Publish and Collect Attendance = Late for recurring individual lesso
   const lessonName = randomText(10);
   const checkLCInfo = new CreateLesson(page);
 
-  await loginBO(page, "partial");
+  await loginBO(page, "full");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "recurringIndividual" });
-  await boLesson.searchStudent("[E2E] Kim Ngan Student JZh5Zu");
+  await boLesson.searchStudent("[E2E] Kim Ngan Student 5qta6d");
   await boLesson.publishLessonOnBO();
   await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();
-  await boLesson.editLesson(lessonName, "recurringGroup", "following");
+  await boLesson.editLesson(lessonName, "recurringGroup", "only");
   await showMessage.editLessonBO();
   await page.waitForTimeout(2000);
   await page.screenshot({ path: "playwright/screenshot/edit-recurring-individual-lesson-BO1.1.png" });
@@ -76,13 +77,13 @@ test("Edit, Publish and Collect Attendance = Absent for recurring group lesson w
   const lessonName = randomText(10);
   const checkLCInfo = new CreateLesson(page);
 
-  await loginBO(page, "partial");
+  await loginBO(page, "full");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "recurringGroup" });
-  await boLesson.searchStudent("[E2E] Kim Ngan Student JZh5Zu");
+  await boLesson.searchStudent("[E2E] Kim Ngan Student 5qta6d");
   await boLesson.publishLessonOnBO();
   await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();
-  await boLesson.editLesson(lessonName, "recurringGroup", "only");
+  await boLesson.editLesson(lessonName, "recurringGroup", "following");
   await showMessage.editLessonBO();
   await page.waitForTimeout(2000);
   await page.screenshot({ path: "playwright/screenshot/edit-recurring-group-lesson-BO1.1.png" });
@@ -105,9 +106,9 @@ test("Edit, Publish and Collect Attendance = allAttend for one time group lesson
   const lessonName = randomText(10);
   const checkLCInfo = new CreateLesson(page);
 
-  await loginBO(page, "partial");
+  await loginBO(page, "full");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "oneTimeGroup" });
-  await boLesson.searchStudent("[E2E] Kim Ngan Student JZh5Zu");
+  await boLesson.searchStudent("[E2E] Kim Ngan Student 5qta6d");
   await boLesson.publishLessonOnBO();
   await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();

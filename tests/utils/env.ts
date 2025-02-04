@@ -1,16 +1,16 @@
-export const ENV_PREPROD = {
-  // Preprod - Account for HQ
-  baseUrl: "https://pre-prod-manabie.lightning.force.com/",
-  username: "kimngan.doan+staffspu@manabie.com",
-  password: "@Kimngan1011",
-};
-
 // export const ENV_PREPROD = {
-//   // Preprod - Account for CM
+//   // Preprod - Account for HQ
 //   baseUrl: "https://pre-prod-manabie.lightning.force.com/",
-//   username: "kimngan.doan+cmpre@manabie.com",
-//   password: "Kimngan@1011",
+//   username: "kimngan.doan+staffspu@manabie.com",
+//   password: "@Kimngan1011",
 // };
+
+export const ENV_PREPROD = {
+  // Preprod - Account for CM
+  baseUrl: "https://pre-prod-manabie.lightning.force.com/",
+  username: "kimngan.doan+cmpre@manabie.com",
+  password: "Kimngan@1011",
+};
 
 // export const ENV_PREPROD = {
 //   // Preprod - Account for CS

@@ -322,4 +322,74 @@ export class CreateLesson {
 
     return { newLessonName };
   }
+
+  // Import lesson
+  public async importLesson() {
+    const lsCommonTest = new LsCommonTest(this.page);
+
+    await lsCommonTest.navigateToPage(LESSON_URL.lesson);
+    await this.page.getByRole("button", { name: "Import" }).click();
+    await this.page
+      .locator('iframe[name="vfFrameId_1737437852941"]')
+      .contentFrame()
+      .getByRole("link", { name: "Lesson Schedule" })
+      .click();
+    await this.page
+      .locator('iframe[name="vfFrameId_1737437064923"]')
+      .contentFrame()
+      .getByRole("link", { name: "Add new records" })
+      .click();
+    await this.page
+      .locator('iframe[name="vfFrameId_1737437199941"]')
+      .contentFrame()
+      .locator('[id="\\35 17\\:0"]')
+      .selectOption("Name");
+    await this.page
+      .locator('iframe[name="vfFrameId_1737437199941"]')
+      .contentFrame()
+      .locator('[id="\\35 48\\:0"]')
+      .selectOption("Salesforce.com ID");
+    await this.page
+      .locator('iframe[name="vfFrameId_1737437199941"]')
+      .contentFrame()
+      .locator('[id="\\35 79\\:0"]')
+      .selectOption("Salesforce.com ID");
+    await this.page
+      .locator('iframe[name="vfFrameId_1737437199941"]')
+      .contentFrame()
+      .locator('[id="\\36 41\\:0"]')
+      .selectOption("Salesforce.com ID");
+    await this.page
+      .locator('iframe[name="vfFrameId_1737437199941"]')
+      .contentFrame()
+      .getByRole("link", { name: "CSV" })
+      .click();
+    // await this.page.locator('iframe[name="vfFrameId_1737437199941"]').contentFrame().getByRole("textbox").click();
+    // await this.page
+    //   .locator('iframe[name="vfFrameId_1737437199941"]')
+    //   .contentFrame()
+    //   .getByRole("textbox")
+    //   .setInputFiles("[SF-STAG] Lesson__Master CSV - Sheet23.csv");
+    // await this.page
+    //   .locator('iframe[name="vfFrameId_1737437199941"]')
+    //   .contentFrame()
+    //   .getByRole("link", { name: "Next" })
+    //   .click();
+    // await this.page
+    //   .locator('iframe[name="vfFrameId_1737437199941"]')
+    //   .contentFrame()
+    //   .getByRole("row", { name: "Map Unmapped Start Date Time" })
+    //   .getByRole("link")
+    //   .click();
+    // await this.page
+    //   .locator('iframe[name="vfFrameId_1737437199941"]')
+    //   .contentFrame()
+    //   .getByPlaceholder("Find field")
+    //   .fill("start");
+    // await this.page
+    //   .locator('iframe[name="vfFrameId_1737437199941"]')
+    //   .contentFrame()
+    //   .getByRole("option", { name: "Start Date" })
+    //   .click();
+  }
 }

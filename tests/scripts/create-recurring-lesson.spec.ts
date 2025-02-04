@@ -7,7 +7,7 @@ import { BOLesson } from "../pages/bo-lesson";
 
 test("Create recurring group lesson with student and teacher", async ({ page }) => {
   const createLessonAllocation = new CreateLessonAllocation(page);
-  const { assignedLessonBefore, url } = await createLessonAllocation.openLADetail("1767");
+  const { assignedLessonBefore, url } = await createLessonAllocation.openLADetail("5991");
   const createLesson = new CreateLesson(page);
   const { lessonName, lessonCode, lessonDate } = await createLesson.createLesson("recurringGroup"); // create recurring group lesson
   const lsCommonTest = new LsCommonTest(page);
@@ -17,7 +17,7 @@ test("Create recurring group lesson with student and teacher", async ({ page }) 
   await page.screenshot({ path: "playwright/screenshot/create-recurring-group-lesson.png" });
   await lsCommonTest.openHyperlink(lessonName);
   await createLesson.addTeacher(LESSON_NAME.teacherRecurringGroup, { save: true, scope: "following" }); // add a teacher with following option
-  await createLesson.addStudent("[E2E] Kim Ngan Student JZh5Zu", { save: true, scope: "following" }); // add a student with following option
+  await createLesson.addStudent("[E2E] Kim Ngan Student 5qta6d", { save: true, scope: "following" }); // add a student with following option
   await createLesson.checkStudentSessionInfo("Student Sessions(1)");
   await createLesson.checkLessonTeacher("Lesson Teachers(1)");
   await lsCommonTest.redirectToTab("Report");
@@ -31,12 +31,12 @@ test("Create recurring group lesson with student and teacher", async ({ page }) 
     lessonAssigneddAfter
   );
 
-  console.log(lessonAssigned, lessonCodeInfo);
+  console.log(lessonAssigned, lessonCodeInfo, lessonName);
 });
 
 test("Create recurring individual lesson with student and teacher", async ({ page }) => {
   const createLessonAllocation = new CreateLessonAllocation(page);
-  const { assignedLessonBefore, url } = await createLessonAllocation.openLADetail("1767");
+  const { assignedLessonBefore, url } = await createLessonAllocation.openLADetail("5991");
   const createLesson = new CreateLesson(page);
   const { lessonName, lessonCode, lessonDate } = await createLesson.createLesson("recurringIndividual"); // create recurring individual lesson
   const lsCommonTest = new LsCommonTest(page);
@@ -46,7 +46,7 @@ test("Create recurring individual lesson with student and teacher", async ({ pag
   await page.screenshot({ path: "playwright/screenshot/create-recurring-individual-lesson.png" });
   await lsCommonTest.openHyperlink(lessonName);
   await createLesson.addTeacher(LESSON_NAME.teacherRecurringIndividual, { save: true }); // add a teacher with only option
-  await createLesson.addStudent("[E2E] Kim Ngan Student JZh5Zu", { save: true }); // add a student with only option
+  await createLesson.addStudent("[E2E] Kim Ngan Student 5qta6d", { save: true }); // add a student with only option
   await createLesson.checkStudentSessionInfo("Student Sessions(1)");
   await createLesson.checkLessonTeacher("Lesson Teachers(1)");
   await lsCommonTest.redirectToTab("Report");
@@ -61,5 +61,5 @@ test("Create recurring individual lesson with student and teacher", async ({ pag
     lessonAssigneddAfter
   );
 
-  console.log(lessonAssigned, lessonCodeInfo);
+  console.log(lessonAssigned, lessonCodeInfo, lessonName);
 });

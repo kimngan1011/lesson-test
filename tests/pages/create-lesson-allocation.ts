@@ -62,7 +62,7 @@ export class CreateLessonAllocation {
     await lsCommonTest.navigateToPage(LESSON_URL.lessonAllocation);
     await lsCommonTest.searchList(LANumber);
     await this.page.getByRole("gridcell").first().click();
-    const LAElement = await this.page.getByRole("rowheader").textContent();
+    const LAElement = await this.page.getByRole("rowheader").first().textContent();
     const splitLANumber = LAElement?.split("Item");
     const getLANumber = splitLANumber?.[1];
 

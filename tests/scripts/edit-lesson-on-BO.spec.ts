@@ -16,7 +16,7 @@ test("Edit, Publish and Collect Attendance = Attend for one time individual less
 
   await loginBO(page, "full");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "oneTimeIndividual" });
-  await boLesson.searchStudent("[E2E] Kim Ngan Student 5qta6d");
+  await boLesson.searchStudent("[E2E] Kim Ngan Student oaNmtl");
   await boLesson.publishLessonOnBO();
   await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();
@@ -48,7 +48,7 @@ test("Edit, Publish and Collect Attendance = Late for recurring individual lesso
 
   await loginBO(page, "full");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "recurringIndividual" });
-  await boLesson.searchStudent("[E2E] Kim Ngan Student 5qta6d");
+  await boLesson.searchStudent("[E2E] Kim Ngan Student oaNmtl");
   await boLesson.publishLessonOnBO();
   await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();
@@ -79,7 +79,7 @@ test("Edit, Publish and Collect Attendance = Absent for recurring group lesson w
 
   await loginBO(page, "full");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "recurringGroup" });
-  await boLesson.searchStudent("[E2E] Kim Ngan Student 5qta6d");
+  await boLesson.searchStudent("[E2E] Kim Ngan Student oaNmtl");
   await boLesson.publishLessonOnBO();
   await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();
@@ -108,7 +108,7 @@ test("Edit, Publish and Collect Attendance = allAttend for one time group lesson
 
   await loginBO(page, "full");
   await boLesson.filterLessonBO({ option: "teacher", lessonType: "oneTimeGroup" });
-  await boLesson.searchStudent("[E2E] Kim Ngan Student 5qta6d");
+  await boLesson.searchStudent("[E2E] Kim Ngan Student oaNmtl");
   await boLesson.publishLessonOnBO();
   await boLesson.filterLessonBO({ option: "lessonStatus", lessonStatus: "Published" });
   await boLesson.openLessonDetail();

@@ -7,7 +7,7 @@ import path from "path";
 
 test("Create one time individual lesson with student and teacher", async ({ page }) => {
   const createLessonAllocation = new CreateLessonAllocation(page);
-  const { assignedLessonBefore, url } = await createLessonAllocation.openLADetail("5991");
+  const { assignedLessonBefore, url } = await createLessonAllocation.openLADetail("9294");
 
   const createLesson = new CreateLesson(page);
   const { lessonName, lessonCode, lessonDate } = await createLesson.createLesson("oneTimeIndividual"); // create one-time individual lesson
@@ -19,7 +19,7 @@ test("Create one time individual lesson with student and teacher", async ({ page
   const lessonCodeInfo = await createLesson.checkLessonCode("oneTime", lessonCode);
   await lsCommonTest.openHyperlink(lessonName);
   await createLesson.addTeacher(LESSON_NAME.teacherOneTimeIndividual);
-  await createLesson.addStudent("[E2E] Kim Ngan Student 5qta6d");
+  await createLesson.addStudent("[E2E] Kim Ngan Student oaNmtl");
   await createLesson.checkStudentSessionInfo("Student Sessions(1)");
   await createLesson.checkLessonTeacher("Lesson Teachers(1)");
   await lsCommonTest.redirectToTab("Report"); // check report info

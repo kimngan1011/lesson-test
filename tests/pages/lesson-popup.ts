@@ -22,7 +22,7 @@ export class LsPopup {
 
   public async getEndDate(fieldName: string) {
     const currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() + 30);
+    currentDate.setDate(currentDate.getDate() + 28);
     const formatOptions = {
       day: "numeric",
       month: "short",

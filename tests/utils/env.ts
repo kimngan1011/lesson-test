@@ -30,5 +30,5 @@ export const ENV_BO = {
   orgID: "manabie-sf",
   baseUrl: "https://backoffice.prep.tokyo.manabie.io/login-tenant",
   username: "kimngan.doan+teacherpre@manabie.com",
-  password: "Kimngan@1011",
+  password: "Kimngan1011@",
 };

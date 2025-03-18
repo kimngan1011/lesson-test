@@ -147,7 +147,7 @@ export class BOLesson {
   // Get end date
   public async getEndDate() {
     const date = new Date();
-    date.setDate(date.getDate() + 30);
+    date.setDate(date.getDate() + 28);
 
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -198,7 +198,7 @@ export class BOLesson {
     await this.page.getByLabel("Classroom").click();
     await this.page
       .getByTestId("SectionClassroom__autocomplete")
-      .getByLabel("Classroom")
+      .getByLabel("Classroom", { exact: true })
       .fill(LESSON_NAME.newClassroom);
     await this.page.getByTestId("MTooltipBase").getByText(LESSON_NAME.newClassroom).click();
     await this.page.getByLabel("Lesson Capacity").click();

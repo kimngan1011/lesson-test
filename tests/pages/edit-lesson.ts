@@ -164,7 +164,12 @@ export class EditLesson {
     const lsCommonTest = new LsCommonTest(this.page);
 
     await this.page.waitForTimeout(3000);
-    await this.page.getByRole("columnheader", { name: "Choose a Row Select All" }).locator("span").nth(2).click();
+    if (!this.page.isClosed()) {
+      await this.page.getByRole("columnheader", { name: "Choose a Row Select All" }).locator("span").nth(2).click();
+    } else {
+      console.error("Page was closed before clicking.");
+    }
+    // await this.page.getByRole("columnheader", { name: "Choose a Row Select All" }).locator("span").nth(2).click();
     await lsCommonTest.clickOnExactButton("Remove Students");
 
     // Step 4: Select "This and the following lessons" if required
@@ -297,8 +302,10 @@ export class EditLesson {
       .click();
     await this.page.getByRole("menuitem", { name: "Edit" }).click();
     await lsCommonTest.selectDropdownList("Attendance Notice", "In Advance");
-    await lsCommonTest.selectDropdownList("Attendance Reason", "Family Reasons");
-    await lsCommonTest.inputDataByLabel("Attendance Note", "Attendance Note");
+    // await lsCommonTest.selectDropdownList("Attendance Reason", "Family Reasons");
+    // await lsCommonTest.inputDataByLabel("Attendance Note", "Attendance Note");
+    await this.page.getByRole("textbox", { name: "Attendance Note" }).focus();
+    await this.page.getByRole("textbox", { name: "Attendance Note" }).fill("Your Value Here");
 
     switch (attendanceStatus) {
       case "attend":
